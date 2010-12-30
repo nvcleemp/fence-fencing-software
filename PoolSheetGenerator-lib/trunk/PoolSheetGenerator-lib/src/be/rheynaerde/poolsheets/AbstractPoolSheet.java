@@ -45,6 +45,8 @@ import java.io.OutputStream;
  */
 public abstract class AbstractPoolSheet {
 
+    private static final String CREATOR = "PoolSheetGenerator library";
+
     private byte[] sheet;
 
     private AbstractPoolSheetConfiguration configuration;
@@ -65,6 +67,8 @@ public abstract class AbstractPoolSheet {
         PdfWriter.getInstance(document, baos);
 
         document.open();
+        document.addTitle(configuration.getTitle());
+        document.addCreator(CREATOR);
 
         buildTitle(document);
         buildTable(document);
