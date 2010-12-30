@@ -23,6 +23,7 @@ package be.rheynaerde.poolsheets;
 
 import be.rheynaerde.poolsheets.configuration.PufTeamPoolSheetConfiguration;
 import be.rheynaerde.poolsheets.configuration.defaultconfiguration.DefaultPufTeamPoolSheetConfiguration;
+import com.itextpdf.text.BaseColor;
 
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
@@ -40,6 +41,8 @@ import java.util.Locale;
  * @author nvcleemp
  */
 public class PufTeamPoolSheet extends AbstractPoolSheet{
+
+    protected static final BaseColor PUF_TEAM_POOL_SHEET_GRAY = new BaseColor(224, 224, 224);
 
     private PufTeamPoolSheetConfiguration configuration;
 
@@ -157,4 +160,11 @@ public class PufTeamPoolSheet extends AbstractPoolSheet{
         largeTable.addCell(cell2);
         document.add(largeTable);
     }
+
+    @Override
+    protected BaseColor getSolidCellColor() {
+        return PUF_TEAM_POOL_SHEET_GRAY;
+    }
+
+
 }
