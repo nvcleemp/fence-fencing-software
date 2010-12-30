@@ -198,7 +198,7 @@ public abstract class AbstractPoolSheet {
         return headerCell;
     }
 
-    protected PdfPCell getBlackCell(){
+    protected PdfPCell getSolidCell(){
         if(configuration.getImage()==null){
             PdfPCell blackCell = new PdfPCell();
             blackCell.setBackgroundColor(BaseColor.BLACK);

@@ -104,7 +104,7 @@ public class ClubPoolSheet extends AbstractPoolSheet{
 
         {
             table.addCell(getHeaderCell(bundle.getString("name")));
-            table.addCell(getBlackCell());
+            table.addCell(getSolidCell());
             for (int i = 0; i < configuration.getNrOfPlayers(); i++) {
                 table.addCell(getHeaderCell(Integer.toString(i+1)));
             }
@@ -124,7 +124,7 @@ public class ClubPoolSheet extends AbstractPoolSheet{
                 resultCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
                 table.addCell(resultCell);
             }
-            table.addCell(getBlackCell());
+            table.addCell(getSolidCell());
             for(int j = i+1; j < configuration.getNrOfPlayers(); j++){
                 String result = configuration.getResult(i+1, j+1);
                 PdfPCell resultCell = new PdfPCell(new Phrase(result==null ? "" : result));
