@@ -200,15 +200,19 @@ public abstract class AbstractPoolSheet {
 
     protected PdfPCell getSolidCell(){
         if(configuration.getImage()==null){
-            PdfPCell blackCell = new PdfPCell();
-            blackCell.setBackgroundColor(BaseColor.BLACK);
-            blackCell.setFixedHeight(configuration.getSquareCellSize());
-            return blackCell;
+            PdfPCell solidCell = new PdfPCell();
+            solidCell.setBackgroundColor(getSolidCellColor());
+            solidCell.setFixedHeight(configuration.getSquareCellSize());
+            return solidCell;
         } else {
-            PdfPCell blackCell = new PdfPCell(configuration.getImage(), true);
-            blackCell.setFixedHeight(configuration.getSquareCellSize());
-            return blackCell;
+            PdfPCell solidCell = new PdfPCell(configuration.getImage(), true);
+            solidCell.setFixedHeight(configuration.getSquareCellSize());
+            return solidCell;
         }
+    }
+
+    protected BaseColor getSolidCellColor(){
+        return BaseColor.BLACK;
     }
 
     public void export(OutputStream os) throws DocumentException, IOException{
