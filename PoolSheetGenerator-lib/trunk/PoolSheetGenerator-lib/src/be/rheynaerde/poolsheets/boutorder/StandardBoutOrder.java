@@ -34,6 +34,12 @@ public class StandardBoutOrder {
         //private
     }
 
+    private static final BoutOrder POOL2 = new DefaultBoutOrder(2,
+             new int[][]{{1,2}});
+
+    private static final BoutOrder POOL3 = new DefaultBoutOrder(3,
+             new int[][]{{1,2},{2,3},{1,3}});
+
     private static final BoutOrder POOL4 = new DefaultBoutOrder(4,
              new int[][]{{1,4},{2,3},{1,3},{2,4},{3,4},{1,2}});
 
@@ -131,7 +137,11 @@ public class StandardBoutOrder {
      * @return A BoutOrder for the given number of players.
      */
     public static BoutOrder getStandardBoutOrder(int nrOfPlayers){
-        if(nrOfPlayers==4)
+        if(nrOfPlayers==2)
+            return POOL2;
+        else if(nrOfPlayers==3)
+            return POOL3;
+        else if(nrOfPlayers==4)
             return POOL4;
         else if(nrOfPlayers==5)
             return POOL5;
