@@ -93,6 +93,76 @@ public class PufBoutOrder {
                 {TEAM_POOL4_2, TEAM_POOL4_3, TEAM_POOL4_4}
             };
 
+    private static final BoutOrder COMPLETE_POOL2_2 = new DefaultBoutOrder(2+2,
+             new int[][]{{1,2},{3,4},
+                         {1,3},{2,4},
+                         {2,3},{1,4}
+                        });
+
+    private static final BoutOrder COMPLETE_POOL2_3 = new DefaultBoutOrder(2+3,
+             new int[][]{{3,4},{1,2},{4,5},{3,5},
+                         {1,3},{2,4},
+                         {1,5},{3,2},
+                         {4,1},{5,2}
+                        });
+
+    private static final BoutOrder COMPLETE_POOL2_4 = new DefaultBoutOrder(2+4,
+             new int[][]{{3,6},{4,5},{1,2},{3,5},{4,6},{5,6},{3,4},
+                         {1,3},{2,4},
+                         {5,1},{6,2},
+                         {4,1},{3,2},
+                         {1,6},{2,5}
+                        });
+
+    private static final BoutOrder COMPLETE_POOL3_2 = new DefaultBoutOrder(3+2,
+             new int[][]{{1,2},{4,5},{2,3},{1,3},
+                         {1,4},{2,5},{3,4},
+                         {5,1},{4,2},{5,3}
+                        });
+
+    private static final BoutOrder COMPLETE_POOL3_3 = new DefaultBoutOrder(3+3,
+             new int[][]{{1,3},{4,6},{2,3},{5,6},{1,2},{4,5},
+                         {3,6},{5,1},{2,4},
+                         {6,1},{3,4},{5,2},
+                         {1,4},{6,2},{3,5}
+                        });
+
+    private static final BoutOrder COMPLETE_POOL3_4 = new DefaultBoutOrder(3+4,
+             new int[][]{{4,7},{5,6},{1,2},{4,6},{5,7},{1,3},{6,7},{4,5},{2,3},
+                         {1,4},{2,5},{3,6},
+                         {1,7},{4,2},{5,3},
+                         {6,1},{7,2},{4,3},
+                         {5,1},{6,2},{7,3}
+                        });
+
+    private static final BoutOrder COMPLETE_POOL4_2 = new DefaultBoutOrder(4+2,
+             new int[][]{{1,4},{2,3},{5,6},{1,3},{2,4},{3,4},{1,2},
+                         {1,5},{6,2},{5,3},{4,6},
+                         {2,5},{6,1},{5,4},{3,6}
+                        });
+
+    private static final BoutOrder COMPLETE_POOL4_3 = new DefaultBoutOrder(4+3,
+             new int[][]{{1,4},{2,3},{5,6},{1,3},{2,4},{5,7},{3,4},{1,2},{6,7},
+                         {1,5},{2,6},{3,7},{4,5},
+                         {6,1},{7,2},{5,3},{6,4},
+                         {7,1},{5,2},{6,3},{7,4}
+                        });
+
+    private static final BoutOrder COMPLETE_POOL4_4 = new DefaultBoutOrder(4+4,
+             new int[][]{{1,4},{5,8},{2,3},{6,7},{1,3},{5,7},{2,4},{6,8},{3,4},{7,8},{1,2},{5,6},
+                         {3,8},{4,6},{1,7},{2,5},
+                         {6,3},{8,1},{5,4},{7,2},
+                         {1,6},{3,5},{2,8},{4,7},
+                         {5,1},{6,2},{7,3},{8,4}
+                        });
+
+    private static final BoutOrder[][] COMPLETE_BOUT_ORDERS =
+            {
+                {COMPLETE_POOL2_2, COMPLETE_POOL2_3, COMPLETE_POOL2_4},
+                {COMPLETE_POOL3_2, COMPLETE_POOL3_3, COMPLETE_POOL3_4},
+                {COMPLETE_POOL4_2, COMPLETE_POOL4_3, COMPLETE_POOL4_4}
+            };
+
     private static final int OFFSET = 2;
 
     public static BoutOrder getTeamBoutOrder(int nrOfPlayersTeamA, int nrOfPlayersTeamB){
@@ -104,5 +174,16 @@ public class PufBoutOrder {
             return EmptyBoutOrder.getInstance();
         else
             return TEAM_BOUT_ORDERS[nrOfPlayersTeamA-OFFSET][nrOfPlayersTeamB-OFFSET];
+    }
+
+    public static BoutOrder getCompleteBoutOrder(int nrOfPlayersTeamA, int nrOfPlayersTeamB){
+        if(nrOfPlayersTeamA-OFFSET < 0 ||
+                nrOfPlayersTeamA-OFFSET >= TEAM_BOUT_ORDERS.length ||
+                nrOfPlayersTeamB-OFFSET < 0 ||
+                nrOfPlayersTeamB-OFFSET >=
+                            TEAM_BOUT_ORDERS[nrOfPlayersTeamA-OFFSET].length)
+            return EmptyBoutOrder.getInstance();
+        else
+            return COMPLETE_BOUT_ORDERS[nrOfPlayersTeamA-OFFSET][nrOfPlayersTeamB-OFFSET];
     }
 }
