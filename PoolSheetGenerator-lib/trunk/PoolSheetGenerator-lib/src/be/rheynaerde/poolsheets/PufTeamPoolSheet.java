@@ -90,6 +90,7 @@ public class PufTeamPoolSheet extends AbstractPoolSheet{
         PdfPTable nameTable = new PdfPTable(1);
         nameTable.setWidthPercentage(100f);
         nameTable.addCell(getEmptyCell());
+        nameTable.addCell(getEmptyCell());
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < configuration.getNrOfPlayers(i+1); j++) {
                 nameTable.addCell(getNameCell(configuration.getNamePlayer(i+1, j+1)));
@@ -97,16 +98,26 @@ public class PufTeamPoolSheet extends AbstractPoolSheet{
         }
 
         //table for scores
-        PdfPTable table = new PdfPTable(configuration.getNrOfPlayers(1) + configuration.getNrOfPlayers(2) + 1);
-        table.setHorizontalAlignment(PdfPTable.ALIGN_CENTER);
-        table.setTotalWidth((configuration.getNrOfPlayers(1) + configuration.getNrOfPlayers(2) + 1)*configuration.getSquareCellSize());
+        final int columnCount = configuration.getNrOfPlayers(1) + configuration.getNrOfPlayers(2) + 2;
+        //one column for each player, an extra column for the numbers and a column for the team marks
+        final int rowCount = columnCount;
+        PdfPTable table = new PdfPTable(columnCount);
+        table.setHorizontalAlignment(PdfPTable.ALIGN_LEFT);
+        table.setTotalWidth((columnCount)*configuration.getSquareCellSize());
         table.setLockedWidth(true);
-        float[] widths = new float[configuration.getNrOfPlayers(1) + configuration.getNrOfPlayers(2) + 1];
+        float[] widths = new float[columnCount];
         for (int i = 0; i < widths.length; i++) {
             widths[i] = 1f;
         }
         table.setWidths(widths);
 
+        PdfPCell topCell = getCellWithBorder(table.getDefaultCell(), Rectangle.RIGHT, 1, 2);
+        topCell.setFixedHeight(configuration.getSquareCellSize());
+        table.addCell(topCell);
+        table.addCell(getCellWithBorder(table.getDefaultCell(), Rectangle.RIGHT, 1, configuration.getNrOfPlayers(1)));
+        table.addCell(getCellWithBorder(table.getDefaultCell(), Rectangle.RIGHT, 1, configuration.getNrOfPlayers(2)));
+
+        table.addCell(getCellWithBorder(table.getDefaultCell(), Rectangle.BOTTOM, 1, 1));
         {
             table.addCell(getSolidCell());
             for (int i = 0; i < configuration.getNrOfPlayers(1) + configuration.getNrOfPlayers(2); i++) {
@@ -114,6 +125,7 @@ public class PufTeamPoolSheet extends AbstractPoolSheet{
             }
         }
 
+        table.addCell(getCellWithBorder(table.getDefaultCell(), Rectangle.BOTTOM, configuration.getNrOfPlayers(1), 1));
         for (int i = 0; i < configuration.getNrOfPlayers(1); i++) {
             table.addCell(getHeaderCell(Integer.toString(i+1)));
             if(i==0){
@@ -127,6 +139,7 @@ public class PufTeamPoolSheet extends AbstractPoolSheet{
             }
         }
 
+        table.addCell(getCellWithBorder(table.getDefaultCell(), Rectangle.BOTTOM, configuration.getNrOfPlayers(2), 1));
         for (int i = 0; i < configuration.getNrOfPlayers(2); i++) {
             table.addCell(getHeaderCell(Integer.toString(configuration.getNrOfPlayers(1)+ i+1)));
             for(int j = 0; j < configuration.getNrOfPlayers(1); j++){
@@ -143,19 +156,20 @@ public class PufTeamPoolSheet extends AbstractPoolSheet{
 
         //large table to take care of the layout
         PdfPTable largeTable = new PdfPTable(3);
-        largeTable.setWidths(new int[]{9,1,10});
+        largeTable.setWidths(new int[]{19,1,20});
+        final float largeTableHeight = configuration.getSquareCellSize() * (rowCount + 1);
 
         PdfPCell cell1 = getEmptyCell();
-        cell1.setFixedHeight(configuration.getSquareCellSize()*(configuration.getNrOfPlayers(1)+configuration.getNrOfPlayers(2)+2));
+        cell1.setFixedHeight(largeTableHeight);
         cell1.addElement(nameTable);
         largeTable.addCell(cell1);
 
         PdfPCell cellSpacer = getEmptyCell();
-        cellSpacer.setFixedHeight(configuration.getSquareCellSize()*(configuration.getNrOfPlayers(1)+configuration.getNrOfPlayers(2)+2));
+        cellSpacer.setFixedHeight(largeTableHeight);
         largeTable.addCell(cellSpacer);
 
         PdfPCell cell2 = getEmptyCell();
-        cell2.setFixedHeight(configuration.getSquareCellSize()*(configuration.getNrOfPlayers(1)+configuration.getNrOfPlayers(2)+2));
+        cell2.setFixedHeight(largeTableHeight);
         cell2.addElement(table);
         largeTable.addCell(cell2);
         document.add(largeTable);
@@ -166,5 +180,12 @@ public class PufTeamPoolSheet extends AbstractPoolSheet{
         return PUF_TEAM_POOL_SHEET_GRAY;
     }
 
+    protected PdfPCell getCellWithBorder(PdfPCell prototype, int border, int rowspan, int colspan){
+        PdfPCell cell = new PdfPCell(prototype);
+        cell.setBorder(border);
+        cell.setColspan(colspan);
+        cell.setRowspan(rowspan);
+        return cell;
+    }
 
 }
