@@ -211,6 +211,7 @@ public abstract class AbstractPoolSheet {
         } else {
             PdfPCell solidCell = new PdfPCell(configuration.getImage(), true);
             solidCell.setFixedHeight(configuration.getSquareCellSize());
+            solidCell.setPadding(solidCell.getPaddingBottom()*2);
             return solidCell;
         }
     }
