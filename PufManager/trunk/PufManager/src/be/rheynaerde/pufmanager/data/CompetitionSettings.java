@@ -82,7 +82,7 @@ public class CompetitionSettings {
     }
 
     public void setImageUrl(URL imageUrl) {
-        if(!this.imageUrl.equals(imageUrl)){
+        if(this.imageUrl == null || !this.imageUrl.equals(imageUrl)){
             this.imageUrl = imageUrl;
             image = null;
         }
