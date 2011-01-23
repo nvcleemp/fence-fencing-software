@@ -25,25 +25,19 @@ import be.rheynaerde.pufmanager.data.Match;
 import java.awt.Component;
 import java.text.MessageFormat;
 import java.util.ResourceBundle;
+import javax.swing.DefaultListCellRenderer;
 import javax.swing.JList;
 
 /**
  *
  * @author nvcleemp
  */
-public class MatchListCellRenderer extends RoundsViewListCellRenderer {
-
-    private static final ResourceBundle BUNDLE = ResourceBundle.getBundle("be.rheynaerde.pufmanager.gui.resources");
+public class RoundsViewListCellRenderer extends DefaultListCellRenderer {
 
     @Override
     public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-        super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-        if(value instanceof Match){
-            Match m = (Match)value;
-            setText(MessageFormat.format(BUNDLE.getString("match.listrenderer.text"),
-                                    m.getFirstTeam().getTeamName(),
-                                    m.getSecondTeam().getTeamName()));
-        }
+        super.getListCellRendererComponent(list, value, index, isSelected && cellHasFocus, cellHasFocus);
+        setOpaque(isSelected && cellHasFocus);
         return this;
     }
 

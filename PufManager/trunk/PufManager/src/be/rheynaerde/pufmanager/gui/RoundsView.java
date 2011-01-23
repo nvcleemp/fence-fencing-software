@@ -28,6 +28,7 @@ import be.rheynaerde.pufmanager.data.listener.CompetitionListener;
 
 import java.awt.Color;
 import java.awt.GridLayout;
+import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 
 /**
@@ -39,8 +40,7 @@ public class RoundsView extends JPanel implements CompetitionListener{
     private Competition competition;
 
     public RoundsView(Competition competition) {
-        super(new GridLayout(0, 1, 0, 5));
-        setBackground(Color.BLACK);
+        super(new GridLayout(0, 1, 5, 5));
         this.competition = competition;
         competition.addListener(this);
         buildView();
@@ -49,7 +49,9 @@ public class RoundsView extends JPanel implements CompetitionListener{
     private void buildView(){
         removeAll();
         for (int i = 0; i < competition.getRoundCount(); i++) {
-            add(new RoundPanel(competition.getRound(i)));
+            final RoundPanel roundPanel = new RoundPanel(competition.getRound(i));
+            roundPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+            add(roundPanel);
         }
     }
 

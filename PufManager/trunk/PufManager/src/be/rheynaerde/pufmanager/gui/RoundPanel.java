@@ -22,11 +22,15 @@
 package be.rheynaerde.pufmanager.gui;
 
 import be.rheynaerde.pufmanager.data.Round;
+import java.awt.Color;
 import java.awt.GridLayout;
 import java.util.ResourceBundle;
+import javax.swing.BorderFactory;
+import javax.swing.GroupLayout;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 
 /**
  *
@@ -40,22 +44,55 @@ public class RoundPanel extends JPanel{
     private Round round;
 
     public RoundPanel(Round round) {
-        super(new GridLayout(1, 0, 2, 0));
+        super(new GridLayout(1, 0, 0, 0));
         this.round = round;
         initGui();
     }
 
     private void initGui(){
-        JLabel label = new JLabel(BUNDLE.getString("roundpanel.matchlist.label"));
-        label.setVerticalAlignment(JLabel.TOP);
-        add(label);
+        JLabel roundNumber = new JLabel(Integer.toString(round.getRoundNumber()+1));
+        roundNumber.setBorder(BorderFactory.createLineBorder(Color.BLACK, 3));
+        JLabel labelMatches = new JLabel(BUNDLE.getString("roundpanel.matchlist.label"));
+        labelMatches.setVerticalAlignment(JLabel.TOP);
         JList matchesList = new JList(round.getMatchesModel());
+        matchesList.setOpaque(false);
         matchesList.setCellRenderer(new MatchListCellRenderer());
-        add(matchesList);
-        label = new JLabel(BUNDLE.getString("roundpanel.restingteamlist.label"));
-        label.setVerticalAlignment(JLabel.TOP);
-        add(label);
-        add(new JList(round.getRestingTeamsModel()));
+        matchesList.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        JLabel labelResting = new JLabel(BUNDLE.getString("roundpanel.restingteamlist.label"));
+        labelResting.setVerticalAlignment(JLabel.TOP);
+        JList restingList = new JList(round.getRestingTeamsModel());
+        restingList.setOpaque(false);
+        restingList.setCellRenderer(new RoundsViewListCellRenderer());
+        restingList.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        JScrollPane matchesListScrollPane = new JScrollPane(matchesList);
+        JScrollPane restingListScrollPane = new JScrollPane(restingList);
+
+        GroupLayout groupLayout = new GroupLayout(this);
+        groupLayout.setAutoCreateGaps(true);
+        groupLayout.setAutoCreateContainerGaps(true);
+
+        groupLayout.setHorizontalGroup(
+                groupLayout.createSequentialGroup()
+                    .addComponent(roundNumber)
+                    .addComponent(labelMatches)
+                    .addComponent(matchesListScrollPane)
+                    .addComponent(labelResting)
+                    .addComponent(restingListScrollPane)
+                );
+        groupLayout.setVerticalGroup(
+                groupLayout.createParallelGroup()
+                    .addComponent(roundNumber)
+                    .addComponent(labelMatches)
+                    .addComponent(matchesListScrollPane)
+                    .addComponent(labelResting)
+                    .addComponent(restingListScrollPane)
+                );
+
+        groupLayout.linkSize(labelMatches, labelResting);
+        groupLayout.linkSize(matchesListScrollPane, restingListScrollPane);
+
+        setLayout(groupLayout);
+
     }
 
 }
