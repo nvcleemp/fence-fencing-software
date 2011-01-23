@@ -31,5 +31,6 @@ public interface TeamListener {
     void fencerAdded(Fencer fencer, int index);
     void fencerRemoved(Fencer fencer, int index);
 
-    void nameChanged();
+    void nameChanged(String oldName, String newName);
+    void targetSizeChanged(int oldSize, int newSize);
 }

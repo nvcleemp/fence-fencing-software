@@ -105,7 +105,11 @@ class SingleTeamPanel extends JPanel implements TeamListener{
         fencersModel.fencerRemoved(index);
     }
 
-    public void nameChanged() {
+    public void nameChanged(String oldName, String newName) {
+        //
+    }
+
+    public void targetSizeChanged(int oldSize, int newSize) {
         //
     }
 

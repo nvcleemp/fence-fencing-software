@@ -35,21 +35,32 @@ public class Team {
 
     private String teamName;
     private List<Fencer> fencers;
+    private int targetSize;
 
     private List<TeamListener> listeners = new ArrayList<TeamListener>();
 
     public Team(String teamName, List<Fencer> fencers) {
         this.teamName = teamName;
         this.fencers = new ArrayList<Fencer>(fencers);
+        this.targetSize = 3;
     }
 
     public Team(String teamName) {
         this.teamName = teamName;
         this.fencers = new ArrayList<Fencer>();
+        this.targetSize = 3;
     }
 
     public String getTeamName() {
         return teamName;
+    }
+
+    public void setTeamName(String teamName) {
+        if(teamName != null && !teamName.equals(this.teamName)){
+            String oldTeamName = this.teamName;
+            this.teamName = teamName;
+            fireTeamNameChanged(oldTeamName, teamName);
+        }
     }
 
     public int getTeamSize() {
@@ -87,6 +98,18 @@ public class Team {
         }
     }
 
+    public int getTargetSize() {
+        return targetSize;
+    }
+
+    public void setTargetSize(int targetSize) {
+        if(targetSize > 0 && this.targetSize != targetSize){
+            int oldTargetSize = this.targetSize;
+            this.targetSize = targetSize;
+            fireTargetSizeChanged(oldTargetSize, targetSize);
+        }
+    }
+
     public void addListener(TeamListener listener){
         listeners.add(listener);
     }
@@ -105,6 +128,18 @@ public class Team {
     protected void fireFencerRemoved(Fencer fencer, int index){
         for (TeamListener l : listeners) {
             l.fencerRemoved(fencer, index);
+        }
+    }
+
+    protected void fireTargetSizeChanged(int oldSize, int newSize){
+        for (TeamListener l : listeners) {
+            l.targetSizeChanged(oldSize, newSize);
+        }
+    }
+
+    protected void fireTeamNameChanged(String oldName, String newName){
+        for (TeamListener l : listeners) {
+            l.nameChanged(oldName, newName);
         }
     }
 
