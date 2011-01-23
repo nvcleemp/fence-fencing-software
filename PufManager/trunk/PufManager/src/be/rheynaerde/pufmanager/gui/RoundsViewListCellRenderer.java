@@ -1,4 +1,4 @@
-/* MatchListCellRenderer.java
+/* RoundsViewListCellRenderer.java
  * =========================================================================
  * This file is part of the Fence project
  * More info can be found at http://nvcleemp.wordpress.com
