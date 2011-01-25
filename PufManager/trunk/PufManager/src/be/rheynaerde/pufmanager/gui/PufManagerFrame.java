@@ -27,13 +27,13 @@ import be.rheynaerde.pufmanager.gui.actions.ImportTextFile;
 import be.rheynaerde.pufmanager.gui.teamcreator.TeamCreator;
 
 import java.awt.BorderLayout;
-import java.awt.GridLayout;
 import java.awt.HeadlessException;
 import java.text.MessageFormat;
 import java.util.ResourceBundle;
-import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JPanel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 
@@ -57,6 +57,7 @@ public class PufManagerFrame extends JFrame {
     }
 
     private void initGui(){
+        initMenuBar();
         setLayout(new BorderLayout());
         JTabbedPane tabs = new JTabbedPane();
         tabs.addTab(BUNDLE.getString("pufmanager.tabs.teams"), new TeamCreator(competition));
@@ -64,9 +65,22 @@ public class PufManagerFrame extends JFrame {
                 JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
                 JScrollPane.HORIZONTAL_SCROLLBAR_NEVER));
         add(tabs, BorderLayout.CENTER);
-        JPanel panel = new JPanel(new GridLayout(0, 1));
-        panel.add(new JButton(new CreateRoundsPdfAction(competition)));
-        panel.add(new JButton(new ImportTextFile(this, competition)));
-        add(panel, BorderLayout.SOUTH);
+    }
+
+    private void initMenuBar(){
+        JMenuBar bar = new JMenuBar();
+        JMenu fileMenu = new JMenu(BUNDLE.getString("pufmanager.menu.file"));
+        fileMenu.add(new JMenuItem(BUNDLE.getString("pufmanager.menu.file.open")));
+        fileMenu.add(new JMenuItem(BUNDLE.getString("pufmanager.menu.file.save")));
+        fileMenu.addSeparator();
+        fileMenu.add(new ImportTextFile(this, competition));
+        fileMenu.addSeparator();
+        fileMenu.add(new JMenuItem(BUNDLE.getString("pufmanager.menu.file.close")));
+        bar.add(fileMenu);
+        JMenu exportMenu = new JMenu(BUNDLE.getString("pufmanager.menu.export"));
+        exportMenu.add(new CreateRoundsPdfAction(competition));
+        exportMenu.add(new JMenuItem(BUNDLE.getString("pufmanager.menu.export.pool")));
+        bar.add(exportMenu);
+        setJMenuBar(bar);
     }
 }
