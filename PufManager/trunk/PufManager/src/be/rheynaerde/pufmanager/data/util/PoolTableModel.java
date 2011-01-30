@@ -96,6 +96,15 @@ public class PoolTableModel extends AbstractTableModel {
         }
     }
 
+    @Override
+    public String getColumnName(int column) {
+        if(column<pool.getPoolSize()){
+            return Integer.toString(column + 1);
+        } else {
+            return summaries.get(column-pool.getPoolSize()).getName();
+        }
+    }
+
     public static interface SummaryValue{
         public String getName();
         public Object getValue(int rowIndex, Pool pool);
