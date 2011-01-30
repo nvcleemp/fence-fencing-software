@@ -24,6 +24,7 @@ package be.rheynaerde.pufmanager.gui.teamcreator;
 import be.rheynaerde.pufmanager.data.Competition;
 import be.rheynaerde.pufmanager.data.Fencer;
 import be.rheynaerde.pufmanager.data.Team;
+import be.rheynaerde.pufmanager.data.listener.TeamAdapter;
 import be.rheynaerde.pufmanager.data.listener.TeamListener;
 import java.awt.Color;
 import java.awt.Component;
@@ -55,11 +56,38 @@ import javax.swing.event.ListSelectionListener;
  *
  * @author nvcleemp
  */
-class SingleTeamPanel extends JPanel implements TeamListener{
+class SingleTeamPanel extends JPanel {
 
     private static final ResourceBundle BUNDLE = ResourceBundle.getBundle("be.rheynaerde.pufmanager.gui.teamcreator");
 
     private Team team;
+
+    private TeamListener teamListener = new TeamAdapter() {
+        @Override
+        public void fencerAdded(Fencer fencer, int index) {
+            fencersModel.fencerAdded(index);
+            checkTeamSize();
+        }
+
+        @Override
+        public void fencerRemoved(Fencer fencer, int index) {
+            fencersModel.fencerRemoved(index);
+            checkTeamSize();
+        }
+
+        @Override
+        public void nameChanged(String oldName, String newName) {
+            if(!teamNameTextField.getText().trim().equals(newName)){
+                teamNameTextField.setText(newName);
+            }
+        }
+
+        @Override
+        public void targetSizeChanged(int oldSize, int newSize) {
+            checkTeamSize();
+        }
+    };
+
     private Competition competition;
     private ListSelectionModel unassignedFencerSelectionModel;
     private ListSelectionModel teamFencerSelectionModel;
@@ -78,7 +106,7 @@ class SingleTeamPanel extends JPanel implements TeamListener{
         initGui();
         defaultBackground = getBackground();
         checkTeamSize();
-        team.addListener(this);
+        team.addListener(teamListener);
     }
 
     private void initGui(){
@@ -188,21 +216,6 @@ class SingleTeamPanel extends JPanel implements TeamListener{
 
     public void fencerAdded(Fencer fencer, int index) {
         fencersModel.fencerAdded(index);
-        checkTeamSize();
-    }
-
-    public void fencerRemoved(Fencer fencer, int index) {
-        fencersModel.fencerRemoved(index);
-        checkTeamSize();
-    }
-
-    public void nameChanged(String oldName, String newName) {
-        if(!teamNameTextField.getText().trim().equals(newName)){
-            teamNameTextField.setText(newName);
-        }
-    }
-
-    public void targetSizeChanged(int oldSize, int newSize) {
         checkTeamSize();
     }
 
