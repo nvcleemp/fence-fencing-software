@@ -73,7 +73,7 @@ public class CreateRoundsPdfAction extends AbstractAction {
         }
     }
 
-    protected void setEnabled(){
+    protected final void setEnabled(){
         setEnabled(competition.getRoundCount()>0);
     }
 }
