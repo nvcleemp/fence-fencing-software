@@ -27,4 +27,19 @@ package be.rheynaerde.pufmanager.data;
  */
 public class PoolResult {
 
+    private boolean victory;
+    private int score;
+
+    public PoolResult(boolean victory, int score) {
+        this.victory = victory;
+        this.score = score;
+    }
+
+    public int getScore() {
+        return score;
+    }
+
+    public boolean isVictory() {
+        return victory;
+    }
 }
