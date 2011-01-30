@@ -24,6 +24,7 @@ package be.rheynaerde.pufmanager.gui;
 import be.rheynaerde.pufmanager.data.Competition;
 import be.rheynaerde.pufmanager.data.Fencer;
 import be.rheynaerde.pufmanager.data.Team;
+import be.rheynaerde.pufmanager.data.listener.CompetitionAdapter;
 import be.rheynaerde.pufmanager.data.listener.CompetitionListener;
 
 import java.awt.Color;
@@ -39,14 +40,22 @@ import javax.swing.SwingConstants;
  *
  * @author nvcleemp
  */
-public class RoundsView extends JPanel implements CompetitionListener, Scrollable{
+public class RoundsView extends JPanel implements Scrollable{
 
     private Competition competition;
+
+    private CompetitionListener competitionListener = new CompetitionAdapter() {
+
+        @Override
+        public void roundsChanged() {
+            buildView();
+        }
+    };
 
     public RoundsView(Competition competition) {
         super(new GridLayout(0, 1, 5, 5));
         this.competition = competition;
-        competition.addListener(this);
+        competition.addListener(competitionListener);
         buildView();
     }
 
@@ -57,26 +66,6 @@ public class RoundsView extends JPanel implements CompetitionListener, Scrollabl
             roundPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
             add(roundPanel);
         }
-    }
-
-    public void teamAdded(Team team, int index) {
-        //
-    }
-
-    public void teamRemoved(Team team, int index) {
-        //
-    }
-
-    public void unassignedFencerAdded(Fencer fencer, int index) {
-        //
-    }
-
-    public void unassignedFencerRemoved(Fencer fencer, int index) {
-        //
-    }
-
-    public void roundsChanged() {
-        buildView();
     }
 
     public Dimension getPreferredScrollableViewportSize() {

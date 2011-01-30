@@ -24,6 +24,7 @@ package be.rheynaerde.pufmanager.gui.teamcreator;
 import be.rheynaerde.pufmanager.data.Competition;
 import be.rheynaerde.pufmanager.data.Fencer;
 import be.rheynaerde.pufmanager.data.Team;
+import be.rheynaerde.pufmanager.data.listener.CompetitionAdapter;
 import be.rheynaerde.pufmanager.data.listener.CompetitionListener;
 import be.rheynaerde.pufmanager.util.ScrollablePanel;
 
@@ -49,13 +50,37 @@ import javax.swing.border.Border;
  *
  * @author nvcleemp
  */
-public class TeamCreator extends JPanel implements CompetitionListener {
+public class TeamCreator extends JPanel {
     
     private static final ResourceBundle BUNDLE = ResourceBundle.getBundle("be.rheynaerde.pufmanager.gui.teamcreator");
 
     private static int teamCounter = 1;
 
     private Competition competition;
+
+    private CompetitionListener competitionListener = new CompetitionAdapter() {
+
+        @Override
+        public void teamAdded(Team team, int index) {
+            addTeamPanel(team);
+        }
+
+        @Override
+        public void teamRemoved(Team team, int index) {
+            removeTeamPanel(team);
+        }
+
+        @Override
+        public void unassignedFencerAdded(Fencer fencer, int index) {
+            unassignedFencersModel.fencerAdded(index);
+        }
+
+        @Override
+        public void unassignedFencerRemoved(Fencer fencer, int index) {
+            unassignedFencersModel.fencerRemoved(index);
+        }
+    };
+
     private final UnassignedFencersModel unassignedFencersModel 
             = new UnassignedFencersModel();
     private ListSelectionModel unassignedFencersSelectionModel;
@@ -65,7 +90,7 @@ public class TeamCreator extends JPanel implements CompetitionListener {
 
     public TeamCreator(Competition competition) {
         this.competition = competition;
-        competition.addListener(this);
+        competition.addListener(competitionListener);
         initGui();
     }
 
@@ -150,26 +175,6 @@ public class TeamCreator extends JPanel implements CompetitionListener {
             teamsPanel.revalidate();
             teamsPanel.repaint();
         }
-    }
-
-    public void roundsChanged() {
-        //do nothing
-    }
-
-    public void teamAdded(Team team, int index) {
-        addTeamPanel(team);
-    }
-
-    public void teamRemoved(Team team, int index) {
-        removeTeamPanel(team);
-    }
-
-    public void unassignedFencerAdded(Fencer fencer, int index) {
-        unassignedFencersModel.fencerAdded(index);
-    }
-
-    public void unassignedFencerRemoved(Fencer fencer, int index) {
-        unassignedFencersModel.fencerRemoved(index);
     }
 
     private final class UnassignedFencersModel extends AbstractListModel {

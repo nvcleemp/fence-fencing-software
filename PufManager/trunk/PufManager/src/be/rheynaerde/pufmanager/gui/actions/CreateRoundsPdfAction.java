@@ -24,6 +24,7 @@ package be.rheynaerde.pufmanager.gui.actions;
 import be.rheynaerde.pufmanager.data.Competition;
 import be.rheynaerde.pufmanager.data.Fencer;
 import be.rheynaerde.pufmanager.data.Team;
+import be.rheynaerde.pufmanager.data.listener.CompetitionAdapter;
 import be.rheynaerde.pufmanager.data.listener.CompetitionListener;
 import be.rheynaerde.pufmanager.gui.workers.ExportFullPdfWorker;
 
@@ -39,12 +40,20 @@ import javax.swing.filechooser.FileNameExtensionFilter;
  *
  * @author nvcleemp
  */
-public class CreateRoundsPdfAction extends AbstractAction implements CompetitionListener {
+public class CreateRoundsPdfAction extends AbstractAction {
 
     private static final ResourceBundle BUNDLE =
             ResourceBundle.getBundle("be.rheynaerde.pufmanager.gui.actions");
 
     private Competition competition;
+
+    private CompetitionListener competitionListener = new CompetitionAdapter() {
+
+        @Override
+        public void roundsChanged() {
+            setEnabled();
+        }
+    };
 
     private JFrame parent;
 
@@ -53,7 +62,7 @@ public class CreateRoundsPdfAction extends AbstractAction implements Competition
     public CreateRoundsPdfAction(Competition competition) {
         super(BUNDLE.getString("create.rounds.pdf"));
         this.competition = competition;
-        competition.addListener(this);
+        competition.addListener(competitionListener);
         chooser.setFileFilter(new FileNameExtensionFilter(BUNDLE.getString("pdf.file.filter"), "pdf"));
         setEnabled();
     }
@@ -62,26 +71,6 @@ public class CreateRoundsPdfAction extends AbstractAction implements Competition
         if(chooser.showSaveDialog(parent)==JFileChooser.APPROVE_OPTION){
             new ExportFullPdfWorker(chooser.getSelectedFile(), competition).startExport(parent);
         }
-    }
-
-    public void teamAdded(Team team, int index) {
-        //
-    }
-
-    public void teamRemoved(Team team, int index) {
-        //
-    }
-
-    public void unassignedFencerAdded(Fencer fencer, int index) {
-        //
-    }
-
-    public void unassignedFencerRemoved(Fencer fencer, int index) {
-        //
-    }
-
-    public void roundsChanged() {
-        setEnabled();
     }
 
     protected void setEnabled(){

@@ -24,6 +24,7 @@ package be.rheynaerde.pufmanager.data.util;
 import be.rheynaerde.pufmanager.data.Competition;
 import be.rheynaerde.pufmanager.data.Fencer;
 import be.rheynaerde.pufmanager.data.Team;
+import be.rheynaerde.pufmanager.data.listener.CompetitionAdapter;
 import be.rheynaerde.pufmanager.data.listener.CompetitionListener;
 import javax.swing.AbstractListModel;
 
@@ -31,12 +32,26 @@ import javax.swing.AbstractListModel;
  *
  * @author nvcleemp
  */
-public class UnassignedFencersListModel extends AbstractListModel implements CompetitionListener {
+public class UnassignedFencersListModel extends AbstractListModel {
 
     private Competition competition;
+    
+    private CompetitionListener competitionListener = new CompetitionAdapter() {
+
+        @Override
+        public void unassignedFencerAdded(Fencer fencer, int index) {
+            fireIntervalAdded(this, index, index);
+        }
+
+        @Override
+        public void unassignedFencerRemoved(Fencer fencer, int index) {
+            fireIntervalRemoved(this, index, index);
+        }
+    };
 
     public UnassignedFencersListModel(Competition competition) {
         this.competition = competition;
+        competition.addListener(competitionListener);
     }
 
     public int getSize() {
@@ -46,25 +61,4 @@ public class UnassignedFencersListModel extends AbstractListModel implements Com
     public Object getElementAt(int index) {
         return competition.getUnassignedFencer(index);
     }
-
-    public void teamAdded(Team team, int index) {
-        //
-    }
-
-    public void teamRemoved(Team team, int index) {
-        //
-    }
-
-    public void unassignedFencerAdded(Fencer fencer, int index) {
-        fireIntervalAdded(this, index, index);
-    }
-
-    public void unassignedFencerRemoved(Fencer fencer, int index) {
-        fireIntervalRemoved(this, index, index);
-    }
-
-    public void roundsChanged() {
-        //
-    }
-
 }
