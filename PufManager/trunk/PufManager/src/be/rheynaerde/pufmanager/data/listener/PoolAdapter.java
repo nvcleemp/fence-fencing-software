@@ -43,4 +43,7 @@ public abstract class PoolAdapter implements PoolListener {
     public void resultUpdated(Fencer fencer, Fencer opponent) {
     }
 
+    public void fencersChanged() {
+    }
+
 }

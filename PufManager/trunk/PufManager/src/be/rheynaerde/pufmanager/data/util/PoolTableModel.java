@@ -25,6 +25,7 @@ import be.rheynaerde.pufmanager.data.Fencer;
 import be.rheynaerde.pufmanager.data.DefaultPool;
 import be.rheynaerde.pufmanager.data.Pool;
 import be.rheynaerde.pufmanager.data.listener.PoolListener;
+
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
 
@@ -58,6 +59,10 @@ public class PoolTableModel extends AbstractTableModel {
 
         public void fencerMoved(Fencer fencer) {
             //structure changed since the order of the columns is changed as well
+            fireTableStructureChanged();
+        }
+
+        public void fencersChanged() {
             fireTableStructureChanged();
         }
     };

@@ -32,4 +32,5 @@ public interface PoolListener {
     void fencerAdded(Fencer fencer);
     void fencerRemoved(Fencer fencer);
     void fencerMoved(Fencer fencer);
+    void fencersChanged();
 }
