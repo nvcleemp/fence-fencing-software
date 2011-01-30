@@ -21,9 +21,7 @@
 
 package be.rheynaerde.pufmanager.data;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -34,19 +32,33 @@ public class DefaultPool extends AbstractPool {
 
     private Map<Fencer, Map<Fencer, PoolResult>> results = new HashMap<Fencer, Map<Fencer, PoolResult>>();
 
-    public void addFencer(Fencer fencer){
+    protected void addFencer(Fencer fencer, boolean isChanging){
         if(!results.containsKey(fencer)){
             results.put(fencer, new HashMap<Fencer, PoolResult>());
             fencers.add(fencer);
+            if(!isChanging)
+                fireAdded(fencer);
+        }
+    }
+
+    public void addFencer(Fencer fencer){
+        addFencer(fencer, false);
+    }
+
+    protected void removeFencer(Fencer fencer, boolean isChanging){
+        if(fencers.contains(fencer)){
+            results.remove(fencer);
+            fencers.remove(fencer);
+            for (Fencer f : results.keySet()) {
+                results.get(f).remove(fencer);
+            }
+            if(!isChanging)
+                fireRemoved(fencer);
         }
     }
 
     public void removeFencer(Fencer fencer){
-        results.remove(fencer);
-        fencers.remove(fencer);
-        for (Fencer f : results.keySet()) {
-            results.get(f).remove(fencer);
-        }
+        removeFencer(fencer, false);
     }
 
     public PoolResult getResult(Fencer fencer, Fencer opponent){
