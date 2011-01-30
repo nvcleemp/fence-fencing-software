@@ -26,6 +26,7 @@ import be.rheynaerde.pufmanager.data.Fencer;
 import be.rheynaerde.pufmanager.data.Team;
 import be.rheynaerde.pufmanager.data.listener.CompetitionAdapter;
 import be.rheynaerde.pufmanager.data.listener.CompetitionListener;
+import be.rheynaerde.pufmanager.data.util.UnassignedFencersListModel;
 import be.rheynaerde.pufmanager.util.ScrollablePanel;
 
 import java.awt.BorderLayout;
@@ -69,20 +70,9 @@ public class TeamCreator extends JPanel {
         public void teamRemoved(Team team, int index) {
             removeTeamPanel(team);
         }
-
-        @Override
-        public void unassignedFencerAdded(Fencer fencer, int index) {
-            unassignedFencersModel.fencerAdded(index);
-        }
-
-        @Override
-        public void unassignedFencerRemoved(Fencer fencer, int index) {
-            unassignedFencersModel.fencerRemoved(index);
-        }
     };
 
-    private final UnassignedFencersModel unassignedFencersModel 
-            = new UnassignedFencersModel();
+    private final UnassignedFencersListModel unassignedFencersModel;
     private ListSelectionModel unassignedFencersSelectionModel;
 
     private JPanel teamsPanel = new ScrollablePanel(new GridLayout(0, 1, 5, 5));
@@ -91,6 +81,7 @@ public class TeamCreator extends JPanel {
     public TeamCreator(Competition competition) {
         this.competition = competition;
         competition.addListener(competitionListener);
+        unassignedFencersModel = new UnassignedFencersListModel(competition);
         initGui();
     }
 
@@ -175,26 +166,6 @@ public class TeamCreator extends JPanel {
             teamsPanel.revalidate();
             teamsPanel.repaint();
         }
-    }
-
-    private final class UnassignedFencersModel extends AbstractListModel {
-
-        public int getSize() {
-            return competition.getNumberOfUnassignedFencers();
-        }
-
-        public Object getElementAt(int index) {
-            return competition.getUnassignedFencer(index);
-        }
-
-        public void fencerAdded(int index){
-            fireIntervalAdded(this, index, index);
-        }
-
-        public void fencerRemoved(int index){
-            fireIntervalRemoved(this, index, index);
-        }
-
     }
 
     private static Border getTitledBorder(String title){
