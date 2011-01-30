@@ -35,5 +35,7 @@ public interface CompetitionListener {
     void unassignedFencerAdded(Fencer fencer, int index);
     void unassignedFencerRemoved(Fencer fencer, int index);
 
+    void fencersChanged();
+
     void roundsChanged();
 }

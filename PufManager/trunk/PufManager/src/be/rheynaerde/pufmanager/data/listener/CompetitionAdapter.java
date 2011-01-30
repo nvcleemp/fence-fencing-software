@@ -44,6 +44,9 @@ public abstract class CompetitionAdapter implements CompetitionListener {
     public void unassignedFencerRemoved(Fencer fencer, int index) {
     }
 
+    public void fencersChanged() {
+    }
+
     public void roundsChanged() {
     }
 

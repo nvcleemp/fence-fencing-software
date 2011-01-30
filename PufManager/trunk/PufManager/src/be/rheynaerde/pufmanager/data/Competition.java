@@ -41,12 +41,14 @@ public class Competition {
 
         @Override
         public void fencerAdded(Fencer fencer, int index) {
-            super.fencerAdded(fencer, index);
+            fencers = null;
+            fireFencersChanged();
         }
 
         @Override
         public void fencerRemoved(Fencer fencer, int index) {
-            super.fencerRemoved(fencer, index);
+            fencers = null;
+            fireFencersChanged();
         }
     };
 
@@ -54,6 +56,8 @@ public class Competition {
     private List<Team> teams;
 
     private List<Fencer> unassignedFencers = new ArrayList<Fencer>();
+
+    private List<Fencer> fencers;
 
     private DefaultRoundGenerator drg = new DefaultRoundGenerator();
 
@@ -130,10 +134,25 @@ public class Competition {
         return unassignedFencers.get(index);
     }
 
+    public List<Fencer> getFencers(){
+        if(fencers==null){
+            fencers = new ArrayList<Fencer>();
+            for (Team team : teams) {
+                for (int i = 0; i < team.getTeamSize(); i++) {
+                    fencers.add(team.getFencer(i));
+                }
+            }
+            fencers.addAll(unassignedFencers);
+        }
+        return fencers;
+    }
+
     public void addUnassignedFencer(Fencer fencer){
         if(!unassignedFencers.contains(fencer)){
             unassignedFencers.add(fencer);
+            fencers = null;
             fireUnassignedFencerAdded(fencer);
+            fireFencersChanged();
         }
     }
 
@@ -141,7 +160,9 @@ public class Competition {
         if(unassignedFencers.contains(fencer)){
             int index = unassignedFencers.indexOf(fencer);
             unassignedFencers.remove(fencer);
+            fencers = null;
             fireUnassignedFencerRemoved(fencer, index);
+            fireFencersChanged();
         }
     }
 
@@ -178,6 +199,12 @@ public class Competition {
     protected void fireUnassignedFencerRemoved(Fencer fencer, int index){
         for (CompetitionListener l : listeners) {
             l.unassignedFencerRemoved(fencer, index);
+        }
+    }
+
+    protected void fireFencersChanged(){
+        for (CompetitionListener l : listeners) {
+            l.fencersChanged();
         }
     }
 
