@@ -64,7 +64,7 @@ public class PoolTableModel extends AbstractTableModel {
 
     public PoolTableModel(DefaultPool pool) {
         this.pool = pool;
-        
+        pool.addPoolListener(listener);
     }
 
     public int getRowCount() {
