@@ -144,7 +144,7 @@ public class Competition {
             }
             fencers.addAll(unassignedFencers);
         }
-        return fencers;
+        return new ArrayList<Fencer>(fencers);
     }
 
     public void addUnassignedFencer(Fencer fencer){
