@@ -22,14 +22,17 @@
 package be.rheynaerde.pufmanager.gui;
 
 import be.rheynaerde.pufmanager.data.Competition;
+import be.rheynaerde.pufmanager.data.CompetitionPool;
 import be.rheynaerde.pufmanager.gui.actions.CreateRoundsPdfAction;
 import be.rheynaerde.pufmanager.gui.actions.ImportTextFile;
 import be.rheynaerde.pufmanager.gui.teamcreator.TeamCreator;
 
 import java.awt.BorderLayout;
 import java.awt.HeadlessException;
+import java.awt.event.ActionEvent;
 import java.text.MessageFormat;
 import java.util.ResourceBundle;
+import javax.swing.AbstractAction;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -46,6 +49,7 @@ public class PufManagerFrame extends JFrame {
     private static final ResourceBundle BUNDLE = ResourceBundle.getBundle("be.rheynaerde.pufmanager.gui.resources");
 
     private Competition competition;
+    private CompetitionPool competitionPool;
 
     public PufManagerFrame(Competition competition) throws HeadlessException {
         super(MessageFormat.format(BUNDLE.getString("pufmanager.title"),
@@ -64,6 +68,8 @@ public class PufManagerFrame extends JFrame {
         tabs.addTab(BUNDLE.getString("pufmanager.tabs.rounds"), new JScrollPane(new RoundsView(competition),
                 JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
                 JScrollPane.HORIZONTAL_SCROLLBAR_NEVER));
+        competitionPool = new CompetitionPool(competition);
+        tabs.addTab(BUNDLE.getString("pufmanager.tabs.pool"), new PoolPanel(competitionPool));
         add(tabs, BorderLayout.CENTER);
     }
 
@@ -81,6 +87,15 @@ public class PufManagerFrame extends JFrame {
         exportMenu.add(new CreateRoundsPdfAction(competition));
         exportMenu.add(new JMenuItem(BUNDLE.getString("pufmanager.menu.export.pool")));
         bar.add(exportMenu);
+        JMenu actionsMenu = new JMenu(BUNDLE.getString("pufmanager.menu.actions"));
+        actionsMenu.add(new AbstractAction(BUNDLE.getString("pufmanager.menu.actions.rearrange")) {
+
+            public void actionPerformed(ActionEvent e) {
+                if(competitionPool!=null)
+                    competitionPool.rearrangeFencers();
+            }
+        });
+        bar.add(actionsMenu);
         setJMenuBar(bar);
     }
 }
