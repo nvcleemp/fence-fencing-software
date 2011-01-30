@@ -84,4 +84,9 @@ public abstract class AbstractPool implements Pool {
         }
     }
 
+    protected void fireFencersChanged(){
+        for (PoolListener poolListener : listeners) {
+            poolListener.fencersChanged();
+        }
+    }
 }
