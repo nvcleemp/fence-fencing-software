@@ -23,6 +23,8 @@ package be.rheynaerde.pufmanager.data;
 
 import be.rheynaerde.pufmanager.DefaultRoundGenerator;
 import be.rheynaerde.pufmanager.data.listener.CompetitionListener;
+import be.rheynaerde.pufmanager.data.listener.TeamAdapter;
+import be.rheynaerde.pufmanager.data.listener.TeamListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +36,19 @@ import java.util.List;
 public class Competition {
 
     private List<CompetitionListener> listeners = new ArrayList<CompetitionListener>();
+
+    private TeamListener teamListener = new TeamAdapter() {
+
+        @Override
+        public void fencerAdded(Fencer fencer, int index) {
+            super.fencerAdded(fencer, index);
+        }
+
+        @Override
+        public void fencerRemoved(Fencer fencer, int index) {
+            super.fencerRemoved(fencer, index);
+        }
+    };
 
     private List<Round> rounds;
     private List<Team> teams;
@@ -60,26 +75,35 @@ public class Competition {
 
     public Competition(List<Team> teams, CompetitionSettings settings) {
         this.teams = new ArrayList<Team>(teams);
+        for (Team team : teams) {
+            team.addListener(teamListener);
+        }
         rounds = drg.getRounds(teams);
         this.settings = settings;
     }
 
     public void addTeam(Team team){
-        teams.add(team);
-        rounds = drg.getRounds(teams);
-        fireTeamAdded(team);
-        fireRoundsChanged();
+        if(team!=null && !teams.contains(team)){
+            teams.add(team);
+            team.addListener(teamListener);
+            rounds = drg.getRounds(teams);
+            fireTeamAdded(team);
+            fireRoundsChanged();
+        }
     }
 
     public void removeTeam(Team team){
-        for (int i = 0; i < team.getTeamSize(); i++) {
-            addUnassignedFencer(team.getFencer(i));
+        if(team!=null && teams.contains(team)){
+            team.removeListener(teamListener);
+            for (int i = 0; i < team.getTeamSize(); i++) {
+                addUnassignedFencer(team.getFencer(i));
+            }
+            int index = teams.indexOf(team);
+            teams.remove(team);
+            rounds = drg.getRounds(teams);
+            fireTeamRemoved(team, index);
+            fireRoundsChanged();
         }
-        int index = teams.indexOf(team);
-        teams.remove(team);
-        rounds = drg.getRounds(teams);
-        fireTeamRemoved(team, index);
-        fireRoundsChanged();
     }
 
     public int getTeamCount(){
