@@ -22,8 +22,6 @@
 package be.rheynaerde.pufmanager.gui.actions;
 
 import be.rheynaerde.pufmanager.data.Competition;
-import be.rheynaerde.pufmanager.data.Fencer;
-import be.rheynaerde.pufmanager.data.Team;
 import be.rheynaerde.pufmanager.data.listener.CompetitionAdapter;
 import be.rheynaerde.pufmanager.data.listener.CompetitionListener;
 import be.rheynaerde.pufmanager.gui.workers.ExportFullPdfWorker;
