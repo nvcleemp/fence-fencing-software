@@ -22,7 +22,6 @@
 package be.rheynaerde.pufmanager.gui.teamcreator;
 
 import be.rheynaerde.pufmanager.data.Competition;
-import be.rheynaerde.pufmanager.data.Fencer;
 import be.rheynaerde.pufmanager.data.Team;
 import be.rheynaerde.pufmanager.data.listener.CompetitionAdapter;
 import be.rheynaerde.pufmanager.data.listener.CompetitionListener;
@@ -36,7 +35,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
 import javax.swing.AbstractAction;
-import javax.swing.AbstractListModel;
 import javax.swing.BorderFactory;
 import javax.swing.GroupLayout;
 import javax.swing.JButton;
@@ -135,7 +133,10 @@ public class TeamCreator extends JPanel {
         list.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
         unassignedFencersSelectionModel = list.getSelectionModel();
         panel.add(new JScrollPane(list), BorderLayout.CENTER);
-        panel.add(new JButton(new AddFencerAction(competition)), BorderLayout.SOUTH);
+        JPanel buttonsPanel = new JPanel(new GridLayout(0, 1));
+        buttonsPanel.add(new JButton(new AddFencerAction(competition)));
+        buttonsPanel.add(new JButton(new RemoveFencerAction(competition, list.getSelectionModel(), unassignedFencersModel)));
+        panel.add(buttonsPanel, BorderLayout.SOUTH);
         return panel;
     }
 
