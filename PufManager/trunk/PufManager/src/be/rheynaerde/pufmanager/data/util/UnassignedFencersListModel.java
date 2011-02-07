@@ -57,7 +57,7 @@ public class UnassignedFencersListModel extends AbstractListModel {
         return competition.getNumberOfUnassignedFencers();
     }
 
-    public Object getElementAt(int index) {
+    public Fencer getElementAt(int index) {
         return competition.getUnassignedFencer(index);
     }
 }
