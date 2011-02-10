@@ -35,6 +35,7 @@ public interface Pool {
     int getPoolSize();
 
     PoolResult getResult(Fencer fencer, Fencer opponent);
+    void setResult(Fencer fencer, Fencer opponent, PoolResult poolResult);
 
     void addPoolListener(PoolListener l);
     void removePoolListener(PoolListener l);

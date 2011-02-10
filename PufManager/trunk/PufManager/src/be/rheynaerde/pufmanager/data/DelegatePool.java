@@ -21,6 +21,10 @@
 
 package be.rheynaerde.pufmanager.data;
 
+import be.rheynaerde.pufmanager.data.listener.PoolListener;
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  *
  * @author nvcleemp
@@ -29,7 +33,56 @@ public class DelegatePool extends AbstractPool {
 
     private Pool delegate;
 
+    private PoolListener delegateListener = new PoolListener() {
+
+        public void resultUpdated(Fencer fencer, Fencer opponent) {
+            if(fencers.contains(fencer) && fencers.contains(opponent)){
+                fireResultUpdated(fencer, opponent);
+            }
+        }
+
+        public void fencerAdded(Fencer fencer) {
+            //ignore
+        }
+
+        public void fencerRemoved(Fencer fencer) {
+            if(fencers.contains(fencer)){
+                fencers.remove(fencer);
+                fireRemoved(fencer);
+            }
+        }
+
+        public void fencerMoved(Fencer fencer) {
+            //ignore
+        }
+
+        public void fencersChanged() {
+            List<Fencer> removedFencers = new ArrayList<Fencer>();
+            for (Fencer fencer : fencers) {
+                if(delegate.getPositionOf(fencer)==-1){
+                    removedFencers.add(fencer);
+                }
+            }
+            if(!removedFencers.isEmpty()){
+                fencers.removeAll(removedFencers);
+                fireFencersChanged();
+            }
+        }
+    };
+
+    public DelegatePool(Pool delegate) {
+        this.delegate = delegate;
+        delegate.addPoolListener(delegateListener);
+    }
+
     public PoolResult getResult(Fencer fencer, Fencer opponent) {
         return delegate.getResult(fencer, opponent);
+    }
+
+    public void setResult(Fencer fencer, Fencer opponent, PoolResult poolResult) {
+        if(fencers.contains(fencer) && fencers.contains(opponent)){
+            delegate.setResult(fencer, opponent, poolResult);
+            //firing will be handled by delegateListener
+        }
     }
 }
