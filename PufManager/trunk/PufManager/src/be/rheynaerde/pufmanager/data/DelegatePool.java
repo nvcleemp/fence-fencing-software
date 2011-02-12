@@ -75,6 +75,12 @@ public class DelegatePool extends AbstractPool {
         delegate.addPoolListener(delegateListener);
     }
 
+    public DelegatePool(Pool delegate, List<Fencer> fencers) {
+        super(fencers);
+        this.delegate = delegate;
+        delegate.addPoolListener(delegateListener);
+    }
+
     public PoolResult getResult(Fencer fencer, Fencer opponent) {
         return delegate.getResult(fencer, opponent);
     }
