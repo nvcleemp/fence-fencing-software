@@ -21,12 +21,15 @@
 
 package be.rheynaerde.pufmanager.data;
 
+import be.rheynaerde.pufmanager.data.listener.CompetitionSettingsListener;
 import com.itextpdf.text.BadElementException;
 import com.itextpdf.text.Image;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -36,21 +39,30 @@ import java.util.logging.Logger;
  *
  * @author nvcleemp
  */
-public class CompetitionSettings {
+public final class CompetitionSettings {
 
     private static final ResourceBundle BUNDLE =
             ResourceBundle.getBundle("be.rheynaerde.pufmanager.data.settings");
+
+    public static enum Setting {
+        TITLE, SUBTITLE, LOCALE, IMAGE, MAX_SCORE;
+    }
+
+    private static List<CompetitionSettingsListener> listeners =
+            new ArrayList<CompetitionSettingsListener>();
 
     private String title;
     private String subtitle;
     private Locale locale;
     private URL imageUrl;
     private Image image;
+    private int maxScore;
 
     public CompetitionSettings() {
         this.title = BUNDLE.getString("title");
         this.subtitle = BUNDLE.getString("subtitle");
         this.locale = Locale.getDefault();
+        this.maxScore = 5;
     }
 
     public Locale getLocale() {
@@ -58,7 +70,10 @@ public class CompetitionSettings {
     }
 
     public void setLocale(Locale locale) {
-        this.locale = locale;
+        if(!equals(this.locale, locale)){
+            this.locale = locale;
+            fireSettingChanged(Setting.LOCALE);
+        }
     }
 
     public String getSubtitle() {
@@ -66,7 +81,10 @@ public class CompetitionSettings {
     }
 
     public void setSubtitle(String subtitle) {
-        this.subtitle = subtitle;
+        if(!equals(this.subtitle, subtitle)){
+            this.subtitle = subtitle;
+            fireSettingChanged(Setting.SUBTITLE);
+        }
     }
 
     public String getTitle() {
@@ -74,7 +92,10 @@ public class CompetitionSettings {
     }
 
     public void setTitle(String title) {
-        this.title = title;
+        if(!equals(this.title, title)){
+            this.title = title;
+            fireSettingChanged(Setting.TITLE);
+        }
     }
 
     public URL getImageUrl() {
@@ -82,9 +103,10 @@ public class CompetitionSettings {
     }
 
     public void setImageUrl(URL imageUrl) {
-        if(this.imageUrl == null || !this.imageUrl.equals(imageUrl)){
+        if(!equals(this.imageUrl, imageUrl)){
             this.imageUrl = imageUrl;
             image = null;
+            fireSettingChanged(Setting.IMAGE);
         }
     }
 
@@ -105,4 +127,39 @@ public class CompetitionSettings {
         }
     }
 
+    public int getMaxScore() {
+        return maxScore;
+    }
+
+    public void setMaxScore(int maxScore) {
+        if(this.maxScore != maxScore){
+            this.maxScore = maxScore;
+            fireSettingChanged(Setting.MAX_SCORE);
+        }
+    }
+
+    public void addListener(CompetitionSettingsListener listener){
+        listeners.add(listener);
+    }
+
+    public void removeListener(CompetitionSettingsListener listener){
+        listeners.remove(listener);
+    }
+
+    private void fireSettingChanged(Setting setting){
+        for (CompetitionSettingsListener l : listeners) {
+            l.settingChanged(setting);
+        }
+    }
+
+    private static boolean equals(Object a, Object b){
+        if(a == b){
+            return true;
+        } else if(a == null || b == null){
+            //one of the two objects is null
+            return false;
+        } else {
+            return a.equals(b);
+        }
+    }
 }
