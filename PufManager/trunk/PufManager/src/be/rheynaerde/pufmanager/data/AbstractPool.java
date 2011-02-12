@@ -38,6 +38,10 @@ public abstract class AbstractPool implements Pool {
     public AbstractPool() {
     }
 
+    public AbstractPool(List<Fencer> fencers) {
+        this.fencers.addAll(fencers);
+    }
+
     public Fencer getFencerAt(int position) {
         return fencers.get(position);
     }
