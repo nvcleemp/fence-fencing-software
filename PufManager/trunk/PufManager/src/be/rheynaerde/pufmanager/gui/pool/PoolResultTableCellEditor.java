@@ -130,6 +130,7 @@ public class PoolResultTableCellEditor extends AbstractCellEditor
             boolean isSelected,
             int row, int column) {
         setValue(value);
+        editorTextField.selectAll();
         return editorTextField;
     }
 
