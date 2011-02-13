@@ -59,6 +59,8 @@ public class Competition {
 
     private List<Fencer> fencers;
 
+    private CompetitionPool competitionPool;
+
     private DefaultRoundGenerator drg = new DefaultRoundGenerator();
 
     private final CompetitionSettings settings;
@@ -71,6 +73,7 @@ public class Competition {
         this.teams = new ArrayList<Team>();
         rounds = drg.getRounds(teams);
         this.settings = settings;
+        this.competitionPool = new CompetitionPool(this);
     }
 
     public Competition(List<Team> teams) {
@@ -84,6 +87,7 @@ public class Competition {
         }
         rounds = drg.getRounds(teams);
         this.settings = settings;
+        this.competitionPool = new CompetitionPool(this);
     }
 
     public void addTeam(Team team){
@@ -164,6 +168,10 @@ public class Competition {
             fireUnassignedFencerRemoved(fencer, index);
             fireFencersChanged();
         }
+    }
+
+    public CompetitionPool getCompetitionPool() {
+        return competitionPool;
     }
 
     public CompetitionSettings getSettings() {
