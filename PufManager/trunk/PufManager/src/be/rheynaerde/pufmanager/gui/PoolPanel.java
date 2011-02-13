@@ -173,8 +173,8 @@ public class PoolPanel extends JPanel {
             else if(value == null && table.getValueAt(column, row)!=null)
                 setBackground(Color.YELLOW);
             else if(value != null && table.getValueAt(column, row)!=null
-                    && ((PoolResult)value).isVictory() ==
-                    ((PoolResult)table.getValueAt(column, row)).isVictory())
+                    && !validatePoolResults((PoolResult)value,
+                                           (PoolResult)table.getValueAt(column, row)))
                 setBackground(Color.RED);
             else if(!isSelected)
                 setBackground(Color.WHITE);
@@ -182,6 +182,16 @@ public class PoolPanel extends JPanel {
             setHorizontalAlignment(SwingConstants.CENTER);
             setVerticalAlignment(SwingConstants.CENTER);
             return this;
+        }
+
+        private static boolean validatePoolResults(PoolResult a, PoolResult b){
+            if(a.isVictory() == b.isVictory())
+                return false;
+            else if((a.isVictory() && a.getScore()<b.getScore()) ||
+                    (b.isVictory() && b.getScore()<a.getScore()))
+                return false;
+            else
+                return true;
         }
 
     }
