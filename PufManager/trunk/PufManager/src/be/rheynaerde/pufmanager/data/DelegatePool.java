@@ -68,6 +68,10 @@ public class DelegatePool extends AbstractPool {
                 fireFencersChanged();
             }
         }
+
+        public void maximumScoreChanged() {
+            fireMaximumScoreChanged();
+        }
     };
 
     public DelegatePool(Pool delegate) {
@@ -90,5 +94,10 @@ public class DelegatePool extends AbstractPool {
             delegate.setResult(fencer, opponent, poolResult);
             //firing will be handled by delegateListener
         }
+    }
+
+    @Override
+    public int getMaximumScore() {
+        return delegate.getMaximumScore();
     }
 }

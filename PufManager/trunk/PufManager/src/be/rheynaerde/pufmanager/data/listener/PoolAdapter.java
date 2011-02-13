@@ -46,4 +46,7 @@ public abstract class PoolAdapter implements PoolListener {
     public void fencersChanged() {
     }
 
+    public void maximumScoreChanged() {
+    }
+
 }

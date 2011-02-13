@@ -35,10 +35,22 @@ public abstract class AbstractPool implements Pool {
 
     protected List<PoolListener> listeners = new ArrayList<PoolListener>();
 
+    protected int maximumScore;
+
     public AbstractPool() {
+        this(5);
+    }
+
+    public AbstractPool(int maximumScore) {
+        this.maximumScore = maximumScore;
     }
 
     public AbstractPool(List<Fencer> fencers) {
+        this(5, fencers);
+    }
+
+    public AbstractPool(int maximumScore, List<Fencer> fencers) {
+        this(maximumScore);
         this.fencers.addAll(fencers);
     }
 
@@ -52,6 +64,17 @@ public abstract class AbstractPool implements Pool {
 
     public int getPositionOf(Fencer fencer) {
         return fencers.indexOf(fencer);
+    }
+
+    public int getMaximumScore() {
+        return maximumScore;
+    }
+
+    public void setMaximumScore(int maximumScore) {
+        if(this.maximumScore == maximumScore){
+            this.maximumScore = maximumScore;
+            fireMaximumScoreChanged();
+        }
     }
 
     //==========================================================================
@@ -89,6 +112,12 @@ public abstract class AbstractPool implements Pool {
     }
 
     protected void fireFencersChanged(){
+        for (PoolListener poolListener : listeners) {
+            poolListener.fencersChanged();
+        }
+    }
+
+    protected void fireMaximumScoreChanged(){
         for (PoolListener poolListener : listeners) {
             poolListener.fencersChanged();
         }

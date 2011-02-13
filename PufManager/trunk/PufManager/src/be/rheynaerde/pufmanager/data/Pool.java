@@ -33,6 +33,7 @@ public interface Pool {
     int getPositionOf(Fencer fencer);
 
     int getPoolSize();
+    int getMaximumScore();
 
     PoolResult getResult(Fencer fencer, Fencer opponent);
     void setResult(Fencer fencer, Fencer opponent, PoolResult poolResult);

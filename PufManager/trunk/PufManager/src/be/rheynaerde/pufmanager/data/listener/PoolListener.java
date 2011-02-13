@@ -33,4 +33,5 @@ public interface PoolListener {
     void fencerRemoved(Fencer fencer);
     void fencerMoved(Fencer fencer);
     void fencersChanged();
+    void maximumScoreChanged();
 }
