@@ -21,8 +21,8 @@
 
 package be.rheynaerde.pufmanager.gui;
 
-import be.rheynaerde.pufmanager.data.DefaultPool;
 import be.rheynaerde.pufmanager.data.Fencer;
+import be.rheynaerde.pufmanager.data.Pool;
 import be.rheynaerde.pufmanager.data.PoolResult;
 import be.rheynaerde.pufmanager.data.listener.PoolAdapter;
 import be.rheynaerde.pufmanager.data.listener.PoolListener;
@@ -48,7 +48,7 @@ import javax.swing.table.TableColumn;
  */
 public class PoolPanel extends JPanel {
 
-    private DefaultPool pool;
+    private Pool pool;
     private PoolListener poolListener = new PoolAdapter() {
 
         @Override
@@ -78,7 +78,7 @@ public class PoolPanel extends JPanel {
     private JTable rowHeader;
     private JTable poolTable;
 
-    public PoolPanel(DefaultPool pool) {
+    public PoolPanel(Pool pool) {
         super(new GridLayout(0, 1));
         this.pool = pool;
         initGui();

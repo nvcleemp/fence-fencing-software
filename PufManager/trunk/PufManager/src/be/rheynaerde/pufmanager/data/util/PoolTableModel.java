@@ -22,7 +22,6 @@
 package be.rheynaerde.pufmanager.data.util;
 
 import be.rheynaerde.pufmanager.data.Fencer;
-import be.rheynaerde.pufmanager.data.DefaultPool;
 import be.rheynaerde.pufmanager.data.Pool;
 import be.rheynaerde.pufmanager.data.PoolResult;
 import be.rheynaerde.pufmanager.data.listener.PoolAdapter;
@@ -81,7 +80,7 @@ public class PoolTableModel extends AbstractTableModel {
         }
     };
 
-    public PoolTableModel(DefaultPool pool) {
+    public PoolTableModel(Pool pool) {
         this.pool = pool;
         pool.addPoolListener(listener);
         summaries = new ArrayList<SummaryValue>();
