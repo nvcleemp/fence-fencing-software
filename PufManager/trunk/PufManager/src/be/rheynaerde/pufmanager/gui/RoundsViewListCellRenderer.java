@@ -21,10 +21,7 @@
 
 package be.rheynaerde.pufmanager.gui;
 
-import be.rheynaerde.pufmanager.data.Match;
 import java.awt.Component;
-import java.text.MessageFormat;
-import java.util.ResourceBundle;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JList;
 
