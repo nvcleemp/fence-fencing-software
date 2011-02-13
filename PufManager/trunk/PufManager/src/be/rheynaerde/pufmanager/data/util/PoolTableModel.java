@@ -47,8 +47,14 @@ public class PoolTableModel extends AbstractTableModel {
         public void resultUpdated(Fencer fencer, Fencer opponent) {
             //we need to fire for the complete row since the values in the
             //summary columns might have changed.
-            int row = pool.getPositionOf(fencer);
-            fireTableRowsUpdated(row, row);
+            int row1 = pool.getPositionOf(fencer);
+            int row2 = pool.getPositionOf(opponent);
+            if(row2 < row1){
+                int temp = row1;
+                row1 = row2;
+                row2 = temp;
+            }
+            fireTableRowsUpdated(row1, row2);
         }
 
         @Override
