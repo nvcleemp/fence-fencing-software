@@ -42,4 +42,11 @@ public class PoolResult {
     public boolean isVictory() {
         return victory;
     }
+
+    @Override
+    public String toString() {
+        return (victory ? "V" : "D") + Integer.toString(score);
+    }
+
+
 }
