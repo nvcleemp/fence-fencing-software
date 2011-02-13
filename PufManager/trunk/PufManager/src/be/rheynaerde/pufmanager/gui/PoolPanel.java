@@ -28,6 +28,7 @@ import be.rheynaerde.pufmanager.data.listener.PoolAdapter;
 import be.rheynaerde.pufmanager.data.listener.PoolListener;
 import be.rheynaerde.pufmanager.data.util.PoolRowHeaderTableModel;
 import be.rheynaerde.pufmanager.data.util.PoolTableModel;
+import be.rheynaerde.pufmanager.gui.pool.PoolResultTableCellEditor;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -86,8 +87,23 @@ public class PoolPanel extends JPanel {
 
     protected final void initGui() {
         poolTable = new JTable(new PoolTableModel(pool));
+
+        //renderers
         poolTable.setDefaultRenderer(PoolResult.class, new PoolResultTableCellRenderer());
         poolTable.setDefaultRenderer(Object.class, new PoolTableCellRenderer());
+
+        //editor
+        final PoolResultTableCellEditor poolResultTableCellEditor =
+                new PoolResultTableCellEditor(pool.getMaximumScore());
+        pool.addPoolListener(new PoolAdapter() {
+            @Override
+            public void maximumScoreChanged() {
+                poolResultTableCellEditor.setMaximumScore(pool.getMaximumScore());
+            }
+        });
+        poolTable.setDefaultEditor(PoolResult.class, poolResultTableCellEditor);
+
+        //layout
         poolTable.setRowHeight(poolTable.getRowHeight()*2);
         calculatePoolTableColumnWidth();
         JScrollPane poolPane = new JScrollPane(poolTable,
