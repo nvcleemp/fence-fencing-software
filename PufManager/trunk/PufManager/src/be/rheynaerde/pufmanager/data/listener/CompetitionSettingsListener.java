@@ -29,5 +29,6 @@ import be.rheynaerde.pufmanager.data.CompetitionSettings;
  */
 public interface CompetitionSettingsListener {
 
-    void settingChanged(CompetitionSettings.Setting setting);
+    void settingChanged(CompetitionSettings competitionSettings,
+                        CompetitionSettings.Setting setting);
 }

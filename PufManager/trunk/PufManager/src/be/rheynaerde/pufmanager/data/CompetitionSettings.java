@@ -148,7 +148,7 @@ public final class CompetitionSettings {
 
     private void fireSettingChanged(Setting setting){
         for (CompetitionSettingsListener l : listeners) {
-            l.settingChanged(setting);
+            l.settingChanged(this, setting);
         }
     }
 
