@@ -97,6 +97,18 @@ public class PoolTableModel extends AbstractTableModel {
     }
 
     @Override
+    public boolean isCellEditable(int rowIndex, int columnIndex) {
+        return rowIndex != columnIndex && columnIndex < pool.getPoolSize();
+    }
+
+    @Override
+    public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
+        if(isCellEditable(rowIndex, columnIndex) && aValue instanceof PoolResult){
+            pool.setResult(pool.getFencerAt(rowIndex), pool.getFencerAt(columnIndex), (PoolResult)aValue);
+        }
+    }
+
+    @Override
     public String getColumnName(int column) {
         if(column<pool.getPoolSize()){
             return Integer.toString(column + 1);
@@ -105,9 +117,21 @@ public class PoolTableModel extends AbstractTableModel {
         }
     }
 
+    @Override
+    public Class<?> getColumnClass(int columnIndex) {
+        if(columnIndex<pool.getPoolSize()){
+            return PoolResult.class;
+        } else {
+            return summaries.get(columnIndex-pool.getPoolSize()).getValueClass();
+        }
+    }
+
+
+
     public static interface SummaryValue{
         public String getName();
         public Object getValue(int rowIndex, Pool pool);
+        public Class getValueClass();
     }
 
     public static final SummaryValue VICTORIES = new SummaryValue() {
@@ -124,6 +148,10 @@ public class PoolTableModel extends AbstractTableModel {
                     victories++;
             }
             return Integer.toString(victories);
+        }
+
+        public Class getValueClass() {
+            return String.class;
         }
     };
 
@@ -142,6 +170,10 @@ public class PoolTableModel extends AbstractTableModel {
             }
             return Integer.toString(losses);
         }
+
+        public Class getValueClass() {
+            return String.class;
+        }
     };
 
     public static final SummaryValue POINTS = new SummaryValue() {
@@ -159,6 +191,10 @@ public class PoolTableModel extends AbstractTableModel {
             }
             return Integer.toString(points);
         }
+
+        public Class getValueClass() {
+            return String.class;
+        }
     };
 
     public static final SummaryValue COUNTERPOINTS = new SummaryValue() {
@@ -175,6 +211,10 @@ public class PoolTableModel extends AbstractTableModel {
                     points+=result.getScore();
             }
             return Integer.toString(points);
+        }
+
+        public Class getValueClass() {
+            return String.class;
         }
     };
 
@@ -195,6 +235,10 @@ public class PoolTableModel extends AbstractTableModel {
                     points-=result.getScore();
             }
             return Integer.toString(points);
+        }
+
+        public Class getValueClass() {
+            return String.class;
         }
     };
 
