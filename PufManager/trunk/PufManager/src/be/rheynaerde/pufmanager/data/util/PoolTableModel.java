@@ -25,6 +25,7 @@ import be.rheynaerde.pufmanager.data.Fencer;
 import be.rheynaerde.pufmanager.data.DefaultPool;
 import be.rheynaerde.pufmanager.data.Pool;
 import be.rheynaerde.pufmanager.data.PoolResult;
+import be.rheynaerde.pufmanager.data.listener.PoolAdapter;
 import be.rheynaerde.pufmanager.data.listener.PoolListener;
 
 import java.util.ArrayList;
@@ -40,8 +41,9 @@ public class PoolTableModel extends AbstractTableModel {
     private Pool pool;
     private List<SummaryValue> summaries;
 
-    private final PoolListener listener = new PoolListener() {
+    private final PoolListener listener = new PoolAdapter() {
 
+        @Override
         public void resultUpdated(Fencer fencer, Fencer opponent) {
             //we need to fire for the complete row since the values in the
             //summary columns might have changed.
@@ -49,21 +51,25 @@ public class PoolTableModel extends AbstractTableModel {
             fireTableRowsUpdated(row, row);
         }
 
+        @Override
         public void fencerAdded(Fencer fencer) {
             //both the number of columns as the number of rows has changed
             fireTableStructureChanged();
         }
 
+        @Override
         public void fencerRemoved(Fencer fencer) {
             //both the number of columns as the number of rows has changed
             fireTableStructureChanged();
         }
 
+        @Override
         public void fencerMoved(Fencer fencer) {
             //structure changed since the order of the columns is changed as well
             fireTableStructureChanged();
         }
 
+        @Override
         public void fencersChanged() {
             fireTableStructureChanged();
         }
