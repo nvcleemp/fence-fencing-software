@@ -21,10 +21,11 @@
 
 package be.rheynaerde.pufmanager.data;
 
+import be.rheynaerde.pufmanager.data.CompetitionSettings.Setting;
 import be.rheynaerde.pufmanager.data.listener.CompetitionAdapter;
 import be.rheynaerde.pufmanager.data.listener.CompetitionListener;
+import be.rheynaerde.pufmanager.data.listener.CompetitionSettingsListener;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -43,9 +44,22 @@ public class CompetitionPool extends DefaultPool{
         }
     };
 
+    private final CompetitionSettingsListener competitionSettingsListener =
+            new CompetitionSettingsListener() {
+
+        public void settingChanged
+                (CompetitionSettings competitionSettings,
+                    Setting setting) {
+            if(Setting.MAXIMUM_SCORE.equals(setting)){
+                setMaximumScore(competitionSettings.getMaximumScore());
+            }
+        }
+    };
+
     public CompetitionPool(Competition competition) {
         this.competition = competition;
         competition.addListener(competitionListener);
+        competition.getSettings().addListener(competitionSettingsListener);
     }
 
     private void updateFencers(){
