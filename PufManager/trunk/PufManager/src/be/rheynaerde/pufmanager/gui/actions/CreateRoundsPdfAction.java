@@ -58,8 +58,13 @@ public class CreateRoundsPdfAction extends AbstractAction {
     private JFileChooser chooser = new JFileChooser(new File(System.getProperty("user.dir")));
     
     public CreateRoundsPdfAction(Competition competition) {
+        this(competition, null);
+    }
+
+    public CreateRoundsPdfAction(Competition competition, JFrame parent) {
         super(BUNDLE.getString("create.rounds.pdf"));
         this.competition = competition;
+        this.parent = parent;
         competition.addListener(competitionListener);
         chooser.setFileFilter(new FileNameExtensionFilter(BUNDLE.getString("pdf.file.filter"), "pdf"));
         setEnabled();

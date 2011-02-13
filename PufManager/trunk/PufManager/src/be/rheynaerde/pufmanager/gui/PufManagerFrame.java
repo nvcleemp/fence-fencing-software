@@ -84,7 +84,7 @@ public class PufManagerFrame extends JFrame {
         fileMenu.add(new JMenuItem(BUNDLE.getString("pufmanager.menu.file.close")));
         bar.add(fileMenu);
         JMenu exportMenu = new JMenu(BUNDLE.getString("pufmanager.menu.export"));
-        exportMenu.add(new CreateRoundsPdfAction(competition));
+        exportMenu.add(new CreateRoundsPdfAction(competition, this));
         exportMenu.add(new JMenuItem(BUNDLE.getString("pufmanager.menu.export.pool")));
         bar.add(exportMenu);
         JMenu actionsMenu = new JMenu(BUNDLE.getString("pufmanager.menu.actions"));
