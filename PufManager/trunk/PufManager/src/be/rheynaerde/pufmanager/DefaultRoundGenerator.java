@@ -22,7 +22,6 @@
 package be.rheynaerde.pufmanager;
 
 import be.rheynaerde.pufmanager.data.Competition;
-import be.rheynaerde.pufmanager.data.Fencer;
 import be.rheynaerde.pufmanager.data.Match;
 import be.rheynaerde.pufmanager.data.Round;
 import be.rheynaerde.pufmanager.data.Team;
@@ -88,9 +87,9 @@ public class DefaultRoundGenerator {
             else if(roundHelper[i][1]==null)
                 round.addRestingTeam(roundHelper[i][0]);
             else if(roundNumber%2==0)
-                round.addMatch(new Match(roundHelper[i][0], roundHelper[i][1], includeInternalBouts));
+                round.addMatch(new Match(roundHelper[i][0], roundHelper[i][1], includeInternalBouts, round));
             else
-                round.addMatch(new Match(roundHelper[i][1], roundHelper[i][0], includeInternalBouts));
+                round.addMatch(new Match(roundHelper[i][1], roundHelper[i][0], includeInternalBouts, round));
         }
         return round;
     }
