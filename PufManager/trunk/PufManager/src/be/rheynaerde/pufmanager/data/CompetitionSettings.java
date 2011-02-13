@@ -45,7 +45,7 @@ public final class CompetitionSettings {
             ResourceBundle.getBundle("be.rheynaerde.pufmanager.data.settings");
 
     public static enum Setting {
-        TITLE, SUBTITLE, LOCALE, IMAGE, MAX_SCORE;
+        TITLE, SUBTITLE, LOCALE, IMAGE, MAXIMUM_SCORE;
     }
 
     private static List<CompetitionSettingsListener> listeners =
@@ -127,14 +127,14 @@ public final class CompetitionSettings {
         }
     }
 
-    public int getMaxScore() {
+    public int getMaximumScore() {
         return maxScore;
     }
 
-    public void setMaxScore(int maxScore) {
+    public void setMaximumScore(int maxScore) {
         if(this.maxScore != maxScore){
             this.maxScore = maxScore;
-            fireSettingChanged(Setting.MAX_SCORE);
+            fireSettingChanged(Setting.MAXIMUM_SCORE);
         }
     }
 
