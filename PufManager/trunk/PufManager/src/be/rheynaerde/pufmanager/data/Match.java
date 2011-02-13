@@ -30,17 +30,11 @@ public class Match {
 
     private Team firstTeam;
     private Team secondTeam;
-    private boolean includeInternalBouts;
     private final Round round;
 
     public Match(Team firstTeam, Team secondTeam, Round round) {
-        this(firstTeam, secondTeam, false, round);
-    }
-
-    public Match(Team firstTeam, Team secondTeam, boolean includeInternalBouts, Round round) {
         this.firstTeam = firstTeam;
         this.secondTeam = secondTeam;
-        this.includeInternalBouts = includeInternalBouts;
         this.round = round;
     }
 
@@ -50,10 +44,6 @@ public class Match {
 
     public Team getSecondTeam() {
         return secondTeam;
-    }
-
-    public boolean includeInternalBouts() {
-        return includeInternalBouts;
     }
 
     public Round getRound() {

@@ -80,16 +80,16 @@ public class DefaultRoundGenerator {
     }
 
     protected final Round getRound(Team[][] roundHelper, int roundNumber, boolean includeInternalBouts, Competition competition){
-        Round round = new Round(roundNumber, competition);
+        Round round = new Round(roundNumber, competition, includeInternalBouts);
         for (int i = 0; i < roundHelper.length; i++) {
             if(roundHelper[i][0]==null)
                 round.addRestingTeam(roundHelper[i][1]);
             else if(roundHelper[i][1]==null)
                 round.addRestingTeam(roundHelper[i][0]);
             else if(roundNumber%2==0)
-                round.addMatch(new Match(roundHelper[i][0], roundHelper[i][1], includeInternalBouts, round));
+                round.addMatch(new Match(roundHelper[i][0], roundHelper[i][1], round));
             else
-                round.addMatch(new Match(roundHelper[i][1], roundHelper[i][0], includeInternalBouts, round));
+                round.addMatch(new Match(roundHelper[i][1], roundHelper[i][0], round));
         }
         return round;
     }

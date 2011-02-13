@@ -35,12 +35,18 @@ public class Round {
     private List<Match> matches;
     private List<Team> restingTeams;
     private int roundNumber;
+    private boolean includeInternalBouts;
 
     private final Competition competition;
 
     public Round(int roundNumber, Competition competition) {
+        this(roundNumber, competition, false);
+    }
+
+    public Round(int roundNumber, Competition competition, boolean includeInternalBouts) {
         this.competition = competition;
         this.roundNumber = roundNumber;
+        this.includeInternalBouts = includeInternalBouts;
         matches = new ArrayList<Match>();
         restingTeams = new ArrayList<Team>();
     }
@@ -67,6 +73,10 @@ public class Round {
 
     public Competition getCompetition() {
         return competition;
+    }
+
+    public boolean includeInternalBouts() {
+        return includeInternalBouts;
     }
 
     public ListModel getMatchesModel(){

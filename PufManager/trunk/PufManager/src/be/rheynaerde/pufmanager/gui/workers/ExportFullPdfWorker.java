@@ -139,7 +139,7 @@ public class ExportFullPdfWorker extends SwingWorker<byte[], Integer>{
             int piste = 1;
             for (Match match : round.getMatches()) {
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                if(match.includeInternalBouts()){
+                if(match.getRound().includeInternalBouts()){
                     PufCompletePoolSheetConfiguration config =
                             new NamedPufCompletePoolSheetConfiguration(
                                 match.getFirstTeam().getFencerNames(),
