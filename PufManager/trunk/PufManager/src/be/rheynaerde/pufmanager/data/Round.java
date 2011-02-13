@@ -36,7 +36,10 @@ public class Round {
     private List<Team> restingTeams;
     private int roundNumber;
 
-    public Round(int roundNumber) {
+    private final Competition competition;
+
+    public Round(int roundNumber, Competition competition) {
+        this.competition = competition;
         this.roundNumber = roundNumber;
         matches = new ArrayList<Match>();
         restingTeams = new ArrayList<Team>();
@@ -60,6 +63,10 @@ public class Round {
 
     public int getRoundNumber() {
         return roundNumber;
+    }
+
+    public Competition getCompetition() {
+        return competition;
     }
 
     public ListModel getMatchesModel(){

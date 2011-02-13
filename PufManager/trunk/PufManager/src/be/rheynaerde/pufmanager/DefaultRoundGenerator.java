@@ -21,6 +21,7 @@
 
 package be.rheynaerde.pufmanager;
 
+import be.rheynaerde.pufmanager.data.Competition;
 import be.rheynaerde.pufmanager.data.Fencer;
 import be.rheynaerde.pufmanager.data.Match;
 import be.rheynaerde.pufmanager.data.Round;
@@ -34,10 +35,14 @@ import java.util.List;
  */
 public class DefaultRoundGenerator {
 
-    public List<Round> getRounds(List<Team> teams){
+    public List<Round> getRounds(Competition competition){
+        List<Team> teams = new ArrayList<Team>();
+        for (int i = 0; i < competition.getTeamCount(); i++) {
+            teams.add(competition.getTeam(i));
+        }
         List<Round> rounds = new ArrayList<Round>();
 
-        if(teams.size()==0) return rounds;
+        if(teams.isEmpty()) return rounds;
         
         int pisteCount = teams.size() % 2 == 0 ? teams.size()/2 : teams.size()/2+1;
         Team[][] roundHelper = new Team[pisteCount][2];
@@ -51,7 +56,7 @@ public class DefaultRoundGenerator {
         }
 
         //create the rounds
-        rounds.add(getRound(roundHelper, 0, true));
+        rounds.add(getRound(roundHelper, 0, true, competition));
         for (int i = 1; i < pisteCount*2-1; i++) {
             //next round
             Team tempStorage = roundHelper[0][1];
@@ -65,18 +70,18 @@ public class DefaultRoundGenerator {
             roundHelper[1][0] = tempStorage;
             
             //create round
-            rounds.add(getRound(roundHelper, i));
+            rounds.add(getRound(roundHelper, i, competition));
         }
 
         return rounds;
     }
 
-    protected final Round getRound(Team[][] roundHelper, int roundNumber){
-        return getRound(roundHelper, roundNumber, false);
+    protected final Round getRound(Team[][] roundHelper, int roundNumber, Competition competition){
+        return getRound(roundHelper, roundNumber, false, competition);
     }
 
-    protected final Round getRound(Team[][] roundHelper, int roundNumber, boolean includeInternalBouts){
-        Round round = new Round(roundNumber);
+    protected final Round getRound(Team[][] roundHelper, int roundNumber, boolean includeInternalBouts, Competition competition){
+        Round round = new Round(roundNumber, competition);
         for (int i = 0; i < roundHelper.length; i++) {
             if(roundHelper[i][0]==null)
                 round.addRestingTeam(roundHelper[i][1]);

@@ -71,7 +71,7 @@ public class Competition {
 
     public Competition(CompetitionSettings settings) {
         this.teams = new ArrayList<Team>();
-        rounds = drg.getRounds(teams);
+        rounds = drg.getRounds(this);
         this.settings = settings;
         this.competitionPool = new CompetitionPool(this);
     }
@@ -85,7 +85,7 @@ public class Competition {
         for (Team team : teams) {
             team.addListener(teamListener);
         }
-        rounds = drg.getRounds(teams);
+        rounds = drg.getRounds(this);
         this.settings = settings;
         this.competitionPool = new CompetitionPool(this);
     }
@@ -94,7 +94,7 @@ public class Competition {
         if(team!=null && !teams.contains(team)){
             teams.add(team);
             team.addListener(teamListener);
-            rounds = drg.getRounds(teams);
+            rounds = drg.getRounds(this);
             fireTeamAdded(team);
             fireRoundsChanged();
         }
@@ -108,7 +108,7 @@ public class Competition {
             }
             int index = teams.indexOf(team);
             teams.remove(team);
-            rounds = drg.getRounds(teams);
+            rounds = drg.getRounds(this);
             fireTeamRemoved(team, index);
             fireRoundsChanged();
         }
