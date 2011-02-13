@@ -35,27 +35,11 @@ import javax.swing.JTextField;
 import javax.swing.table.TableCellEditor;
 
 /**
- * The default editor for table and tree cells.
- * <p>
- * <strong>Warning:</strong>
- * Serialized objects of this class will not be compatible with
- * future Swing releases. The current serialization support is
- * appropriate for short term storage or RMI between applications running
- * the same version of Swing.  As of 1.4, support for long term storage
- * of all JavaBeans<sup><font size="-2">TM</font></sup>
- * has been added to the <code>java.beans</code> package.
- * Please see {@link java.beans.XMLEncoder}.
- *
- * @author Alan Chung
- * @author Philip Milne
+ * 
  */
 public class PoolResultTableCellEditor extends AbstractCellEditor
         implements TableCellEditor {
 
-//
-//  Instance Variables
-//
-    /** The Swing component being edited. */
     protected JTextField editorTextField;
 
     /**
@@ -76,14 +60,6 @@ public class PoolResultTableCellEditor extends AbstractCellEditor
 
     protected int maxScore;
 
-//
-//  Constructors
-//
-    /**
-     * Constructs a <code>DefaultCellEditor</code> that uses a text field.
-     *
-     * @param textField  a <code>JTextField</code> object
-     */
     public PoolResultTableCellEditor(int maxScore) {
         this.maxScore = maxScore;
         editorTextField = new JTextField();
@@ -99,9 +75,6 @@ public class PoolResultTableCellEditor extends AbstractCellEditor
         return editorTextField;
     }
 
-//
-//  Modifying
-//
     /**
      * Specifies the number of clicks needed to start editing.
      *
@@ -205,5 +178,5 @@ public class PoolResultTableCellEditor extends AbstractCellEditor
     public static class ParseException extends Exception {
 
     }
-} // End of class JCellEditor
+}
 
