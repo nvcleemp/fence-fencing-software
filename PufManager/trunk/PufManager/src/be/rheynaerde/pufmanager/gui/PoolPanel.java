@@ -23,6 +23,7 @@ package be.rheynaerde.pufmanager.gui;
 
 import be.rheynaerde.pufmanager.data.DefaultPool;
 import be.rheynaerde.pufmanager.data.Fencer;
+import be.rheynaerde.pufmanager.data.PoolResult;
 import be.rheynaerde.pufmanager.data.listener.PoolAdapter;
 import be.rheynaerde.pufmanager.data.listener.PoolListener;
 import be.rheynaerde.pufmanager.data.util.PoolRowHeaderTableModel;
@@ -31,7 +32,6 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridLayout;
-import java.awt.Rectangle;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -86,6 +86,7 @@ public class PoolPanel extends JPanel {
 
     protected final void initGui() {
         poolTable = new JTable(new PoolTableModel(pool));
+        poolTable.setDefaultRenderer(PoolResult.class, new PoolResultTableCellRenderer());
         poolTable.setDefaultRenderer(Object.class, new PoolTableCellRenderer());
         poolTable.setRowHeight(poolTable.getRowHeight()*2);
         calculatePoolTableColumnWidth();
@@ -135,6 +136,18 @@ public class PoolPanel extends JPanel {
     }
 
     private static class PoolTableCellRenderer extends DefaultTableCellRenderer {
+
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+            super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+            setHorizontalAlignment(SwingConstants.CENTER);
+            setVerticalAlignment(SwingConstants.CENTER);
+            return this;
+        }
+
+    }
+
+    private static class PoolResultTableCellRenderer extends DefaultTableCellRenderer {
 
         @Override
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
