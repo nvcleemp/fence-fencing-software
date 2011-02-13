@@ -170,8 +170,15 @@ public class PoolPanel extends JPanel {
             super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
             if(row==column)
                 setBackground(Color.BLACK);
-            else
+            else if(value == null && table.getValueAt(column, row)!=null)
+                setBackground(Color.YELLOW);
+            else if(value != null && table.getValueAt(column, row)!=null
+                    && ((PoolResult)value).isVictory() ==
+                    ((PoolResult)table.getValueAt(column, row)).isVictory())
+                setBackground(Color.RED);
+            else if(!isSelected)
                 setBackground(Color.WHITE);
+
             setHorizontalAlignment(SwingConstants.CENTER);
             setVerticalAlignment(SwingConstants.CENTER);
             return this;
