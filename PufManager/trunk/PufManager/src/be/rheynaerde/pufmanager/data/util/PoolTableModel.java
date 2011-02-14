@@ -91,6 +91,12 @@ public class PoolTableModel extends AbstractTableModel {
         summaries.add(TOTAL_POINTS);
     }
 
+    public PoolTableModel(Pool pool, List<SummaryValue> summaryValues) {
+        this.pool = pool;
+        pool.addPoolListener(listener);
+        summaries = new ArrayList<SummaryValue>(summaryValues);
+    }
+
     public int getRowCount() {
         return pool.getPoolSize();
     }
