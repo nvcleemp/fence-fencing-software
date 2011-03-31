@@ -119,7 +119,7 @@ public abstract class AbstractPool implements Pool {
 
     protected void fireMaximumScoreChanged(){
         for (PoolListener poolListener : listeners) {
-            poolListener.fencersChanged();
+            poolListener.maximumScoreChanged();
         }
     }
 }
