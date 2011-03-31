@@ -71,7 +71,7 @@ public abstract class AbstractPool implements Pool {
     }
 
     public void setMaximumScore(int maximumScore) {
-        if(this.maximumScore == maximumScore){
+        if(this.maximumScore != maximumScore){
             this.maximumScore = maximumScore;
             fireMaximumScoreChanged();
         }
