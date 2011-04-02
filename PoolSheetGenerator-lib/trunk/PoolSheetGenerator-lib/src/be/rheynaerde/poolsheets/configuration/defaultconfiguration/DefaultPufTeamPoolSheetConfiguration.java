@@ -88,4 +88,20 @@ public class DefaultPufTeamPoolSheetConfiguration extends DefaultAbstractPoolShe
         return FontFactory.getFont("courier", 24f, Font.BOLD);
     }
 
+    public String getResult(int playerTeam, int player, int opponentTeam, int opponent) {
+        return null;
+    }
+
+    @Override
+    public String getResult(int player, int opponent) {
+        if((player<teamSizes[0])==(opponent<teamSizes[0])){
+            //players are in the same team
+            throw new IllegalArgumentException("These two players are in the same team");
+        } else if(player<teamSizes[0]){
+            return getResult(0, player, 1, opponent - teamSizes[0]);
+        } else {
+            return getResult(1, player - teamSizes[0], 0, opponent);
+        }
+    }
+
 }

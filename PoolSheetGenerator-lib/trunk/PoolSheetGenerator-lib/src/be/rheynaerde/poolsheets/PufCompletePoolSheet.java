@@ -103,7 +103,7 @@ public class PufCompletePoolSheet extends AbstractPufPoolSheet {
                     PdfPCell blackCell = getSolidCell();
                     table.addCell(blackCell);
                 } else {
-                    table.addCell("");
+                    table.addCell(configuration.getResult(i, j));
                 }
             }
         }

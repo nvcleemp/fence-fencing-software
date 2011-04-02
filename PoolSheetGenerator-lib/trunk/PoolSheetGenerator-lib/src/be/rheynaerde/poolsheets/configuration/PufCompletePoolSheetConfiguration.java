@@ -28,4 +28,5 @@ package be.rheynaerde.poolsheets.configuration;
 public interface PufCompletePoolSheetConfiguration extends AbstractPoolSheetConfiguration{
     int getNrOfPlayers(int team);
     String getNamePlayer(int team, int i);
+    String getResult(int playerTeam, int player, int opponentTeam, int opponent);
 }

@@ -88,4 +88,25 @@ public class DefaultPufCompletePoolSheetConfiguration extends DefaultAbstractPoo
         return FontFactory.getFont("courier", 24f, Font.BOLD);
     }
 
+    public String getResult(int playerTeam, int player, int opponentTeam, int opponent) {
+        return null;
+    }
+
+    @Override
+    public String getResult(int player, int opponent) {
+        if(player<teamSizes[0]){
+            if(opponent<teamSizes[0]){
+                return getResult(0, player, 0, opponent);
+            } else {
+                return getResult(0, player, 1, opponent - teamSizes[0]);
+            }
+        } else {
+            if(opponent<teamSizes[0]){
+                return getResult(1, player - teamSizes[0], 0, opponent);
+            } else {
+                return getResult(1, player - teamSizes[0], 1, opponent - teamSizes[0]);
+            }
+        }
+    }
+
 }

@@ -102,7 +102,7 @@ public class PufTeamPoolSheet extends AbstractPufPoolSheet{
                 table.addCell(blackCell);
             }
             for (int j = 0; j < configuration.getNrOfPlayers(2); j++) {
-                table.addCell("");
+                table.addCell(configuration.getResult(0, i, 1, j));
             }
         }
 
@@ -110,7 +110,7 @@ public class PufTeamPoolSheet extends AbstractPufPoolSheet{
         for (int i = 0; i < configuration.getNrOfPlayers(2); i++) {
             table.addCell(getHeaderCell(Integer.toString(configuration.getNrOfPlayers(1) + i + 1)));
             for (int j = 0; j < configuration.getNrOfPlayers(1); j++) {
-                table.addCell("");
+                table.addCell(configuration.getResult(1, i, 0, j));
             }
             if (i == 0) {
                 PdfPCell blackCell = getSolidCell();
