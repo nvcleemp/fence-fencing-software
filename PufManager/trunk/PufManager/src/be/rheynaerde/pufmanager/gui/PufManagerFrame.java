@@ -22,7 +22,9 @@
 package be.rheynaerde.pufmanager.gui;
 
 import be.rheynaerde.pufmanager.data.Competition;
-import be.rheynaerde.pufmanager.data.CompetitionPool;
+import be.rheynaerde.pufmanager.data.CompetitionSettings;
+import be.rheynaerde.pufmanager.data.CompetitionSettings.Setting;
+import be.rheynaerde.pufmanager.data.listener.CompetitionSettingsListener;
 import be.rheynaerde.pufmanager.gui.actions.CreateRoundsPdfAction;
 import be.rheynaerde.pufmanager.gui.actions.ImportTextFile;
 import be.rheynaerde.pufmanager.gui.teamcreator.TeamCreator;
@@ -55,6 +57,16 @@ public class PufManagerFrame extends JFrame {
                 competition.getSettings().getTitle(),
                 competition.getSettings().getSubtitle()));
         this.competition = competition;
+        this.competition.getSettings().addListener(new CompetitionSettingsListener() {
+
+            public void settingChanged(CompetitionSettings competitionSettings, Setting setting) {
+                if(Setting.SUBTITLE.equals(setting) || Setting.TITLE.equals(setting)){
+                    setTitle(MessageFormat.format(BUNDLE.getString("pufmanager.title"),
+                PufManagerFrame.this.competition.getSettings().getTitle(),
+                PufManagerFrame.this.competition.getSettings().getSubtitle()));
+                }
+            }
+        });
         initGui();
         pack();
     }
