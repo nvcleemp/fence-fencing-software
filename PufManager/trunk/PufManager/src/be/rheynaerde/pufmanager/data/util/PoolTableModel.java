@@ -120,7 +120,7 @@ public class PoolTableModel extends AbstractTableModel {
 
     @Override
     public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-        if(isCellEditable(rowIndex, columnIndex) && aValue instanceof PoolResult){
+        if(isCellEditable(rowIndex, columnIndex) && (aValue instanceof PoolResult || aValue == null)){
             pool.setResult(pool.getFencerAt(rowIndex), pool.getFencerAt(columnIndex), (PoolResult)aValue);
         }
     }

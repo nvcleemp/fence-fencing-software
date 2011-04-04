@@ -67,9 +67,14 @@ public class DefaultPool extends AbstractPool {
 
     public void setResult(Fencer fencer, Fencer opponent, PoolResult poolResult) {
         if(results.containsKey(fencer)){
-            results.get(fencer).put(opponent, poolResult);
+            if(poolResult == null){
+                results.get(fencer).remove(opponent);
+            } else {
+                results.get(fencer).put(opponent, poolResult);
+            }
             fireResultUpdated(fencer, opponent);
         }
     }
+
 
 }
