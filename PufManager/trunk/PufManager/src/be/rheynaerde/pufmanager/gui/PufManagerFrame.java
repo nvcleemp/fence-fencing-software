@@ -27,6 +27,7 @@ import be.rheynaerde.pufmanager.data.CompetitionSettings.Setting;
 import be.rheynaerde.pufmanager.data.listener.CompetitionSettingsListener;
 import be.rheynaerde.pufmanager.gui.actions.CreateRoundsPdfAction;
 import be.rheynaerde.pufmanager.gui.actions.ImportTextFile;
+import be.rheynaerde.pufmanager.gui.dialogs.SettingsDialog;
 import be.rheynaerde.pufmanager.gui.teamcreator.TeamCreator;
 
 import java.awt.BorderLayout;
@@ -101,6 +102,11 @@ public class PufManagerFrame extends JFrame {
         actionsMenu.add(new AbstractAction(BUNDLE.getString("pufmanager.menu.actions.rearrange")) {
             public void actionPerformed(ActionEvent e) {
                 competition.getCompetitionPool().rearrangeFencers();
+            }
+        });
+        actionsMenu.add(new AbstractAction(BUNDLE.getString("pufmanager.menu.actions.settings")) {
+            public void actionPerformed(ActionEvent e) {
+                SettingsDialog.showSettingsDialog(PufManagerFrame.this, competition.getSettings());
             }
         });
         bar.add(actionsMenu);
