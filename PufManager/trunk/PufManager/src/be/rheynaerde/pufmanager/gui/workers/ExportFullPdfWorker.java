@@ -33,6 +33,7 @@ import be.rheynaerde.poolsheets.configuration.defaultconfiguration.NamedPufTeamP
 import be.rheynaerde.pufmanager.data.Competition;
 import be.rheynaerde.pufmanager.data.Fencer;
 import be.rheynaerde.pufmanager.data.Match;
+import be.rheynaerde.pufmanager.data.PoolResult;
 import be.rheynaerde.pufmanager.data.Round;
 import be.rheynaerde.pufmanager.data.Team;
 
@@ -138,6 +139,7 @@ public class ExportFullPdfWorker extends SwingWorker<byte[], Integer>{
             Round round = competition.getRound(i);
             int piste = 1;
             for (Match match : round.getMatches()) {
+                final Match currentMatch = match;
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
                 if(match.getRound().includeInternalBouts()){
                     PufCompletePoolSheetConfiguration config =
@@ -145,7 +147,19 @@ public class ExportFullPdfWorker extends SwingWorker<byte[], Integer>{
                                 match.getFirstTeam().getFencerNames(),
                                 match.getSecondTeam().getFencerNames(),
                                 20f, competition.getSettings().getImage(), competition.getSettings().getLocale(),
-                                competition.getSettings().getTitle(), competition.getSettings().getSubtitle());
+                                competition.getSettings().getTitle(), competition.getSettings().getSubtitle()){
+
+                        @Override
+                        public String getResult(int team1, int player1, int team2, int player2) {
+                            Fencer player = (team1 == 0 ? currentMatch.getFirstTeam() : currentMatch.getSecondTeam())
+                                    .getFencer(player1);
+                            Fencer opponent = (team2 == 0 ? currentMatch.getFirstTeam() : currentMatch.getSecondTeam())
+                                    .getFencer(player2);
+                            PoolResult result = competition.getCompetitionPool().getResult(player, opponent);
+                            return result==null ? null : result.toString();
+                        }
+
+                    };
                     PufCompletePoolSheet sheet = new PufCompletePoolSheet(config);
                     sheet.export(baos);
                 } else {
@@ -154,7 +168,19 @@ public class ExportFullPdfWorker extends SwingWorker<byte[], Integer>{
                                 match.getFirstTeam().getFencerNames(),
                                 match.getSecondTeam().getFencerNames(),
                                 20f, competition.getSettings().getImage(), competition.getSettings().getLocale(),
-                                competition.getSettings().getTitle(), competition.getSettings().getSubtitle());
+                                competition.getSettings().getTitle(), competition.getSettings().getSubtitle()){
+
+                        @Override
+                        public String getResult(int team1, int player1, int team2, int player2) {
+                            Fencer player = (team1 == 0 ? currentMatch.getFirstTeam() : currentMatch.getSecondTeam())
+                                    .getFencer(player1);
+                            Fencer opponent = (team2 == 0 ? currentMatch.getFirstTeam() : currentMatch.getSecondTeam())
+                                    .getFencer(player2);
+                            PoolResult result = competition.getCompetitionPool().getResult(player, opponent);
+                            return result==null ? null : result.toString();
+                        }
+
+                    };
                     PufTeamPoolSheet sheet = new PufTeamPoolSheet(config);
                     sheet.export(baos);
 
@@ -164,12 +190,23 @@ public class ExportFullPdfWorker extends SwingWorker<byte[], Integer>{
             }
             if(i==0){
                 for (Team team : round.getRestingTeams()) {
+                    final Team currentTeam = team;
                     ByteArrayOutputStream baos = new ByteArrayOutputStream();
                     PufSingleTeamPoolSheetConfiguration config =
                             new NamedPufSingleTeamPoolSheetConfiguration(
                                 team.getFencerNames(),
                                 20f, competition.getSettings().getImage(), competition.getSettings().getLocale(),
-                                competition.getSettings().getTitle(), competition.getSettings().getSubtitle());
+                                competition.getSettings().getTitle(), competition.getSettings().getSubtitle()){
+
+                        @Override
+                        public String getResult(int player, int opponent) {
+                            Fencer playerFencer = currentTeam.getFencer(player);
+                            Fencer opponentFencer = currentTeam.getFencer(opponent);
+                            PoolResult result = competition.getCompetitionPool().getResult(playerFencer, opponentFencer);
+                            return result==null ? null : result.toString();
+                        }
+
+                    };
                     PufSingleTeamPoolSheet sheet = new PufSingleTeamPoolSheet(config);
                     sheet.export(baos);
                     addPdfToDocument(baos, copy, String.format(stampText, i+1, piste));
