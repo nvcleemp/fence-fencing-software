@@ -158,6 +158,7 @@ public class PoolPanel extends JPanel {
             super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
             setHorizontalAlignment(SwingConstants.CENTER);
             setVerticalAlignment(SwingConstants.CENTER);
+            setBackground(Color.LIGHT_GRAY);
             return this;
         }
 
