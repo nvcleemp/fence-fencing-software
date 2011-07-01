@@ -89,6 +89,7 @@ public class PoolTableModel extends AbstractTableModel {
         summaries.add(POINTS);
         summaries.add(COUNTERPOINTS);
         summaries.add(TOTAL_POINTS);
+        summaries.add(POSITION);
     }
 
     public PoolTableModel(Pool pool, List<SummaryValue> summaryValues) {
@@ -252,6 +253,22 @@ public class PoolTableModel extends AbstractTableModel {
                     points-=result.getScore();
             }
             return Integer.toString(points);
+        }
+
+        public Class getValueClass() {
+            return String.class;
+        }
+    };
+
+    public static final SummaryValue POSITION = new SummaryValue() {
+
+        public String getName() {
+            return "P";
+        }
+
+        public Object getValue(int rowIndex, Pool pool) {
+            //TODO: improve this to allow for ex aequo's
+            return Integer.toString(pool.getPositions().indexOf(pool.getFencerAt(rowIndex))+1);
         }
 
         public Class getValueClass() {
