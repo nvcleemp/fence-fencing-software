@@ -100,4 +100,10 @@ public class DelegatePool extends AbstractPool {
     public int getMaximumScore() {
         return delegate.getMaximumScore();
     }
+
+    public List<Fencer> getPositions() {
+        List<Fencer> positions = new ArrayList<Fencer>(delegate.getPositions());
+        positions.retainAll(fencers);
+        return positions;
+    }
 }

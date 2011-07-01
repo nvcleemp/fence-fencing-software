@@ -22,6 +22,7 @@
 package be.rheynaerde.pufmanager.data;
 
 import be.rheynaerde.pufmanager.data.listener.PoolListener;
+import java.util.List;
 
 /**
  *
@@ -37,6 +38,7 @@ public interface Pool {
 
     PoolResult getResult(Fencer fencer, Fencer opponent);
     void setResult(Fencer fencer, Fencer opponent, PoolResult poolResult);
+    List<Fencer> getPositions();
 
     void addPoolListener(PoolListener l);
     void removePoolListener(PoolListener l);
