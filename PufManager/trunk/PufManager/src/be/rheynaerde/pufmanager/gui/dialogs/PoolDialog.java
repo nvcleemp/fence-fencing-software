@@ -59,10 +59,13 @@ public class PoolDialog {
         for (int i = 0; i < match.getSecondTeam().getTeamSize(); i++) {
             fencers.add(match.getSecondTeam().getFencer(i));
         }
+        String title = String.format("%s vs %s", 
+                                match.getFirstTeam().getTeamName(),
+                                match.getSecondTeam().getTeamName());
         if(match.getRound().includeInternalBouts()){
-            showPoolDialog(null, match.toString(), new DelegatePool(pool, fencers));
+            showPoolDialog(null, title, new DelegatePool(pool, fencers));
         } else {
-            showTeamsPoolDialog(null, match.toString(), new DelegatePool(pool, fencers), match.getFirstTeam(), match.getSecondTeam());
+            showTeamsPoolDialog(null, title, new DelegatePool(pool, fencers), match.getFirstTeam(), match.getSecondTeam());
         }
     }
 
