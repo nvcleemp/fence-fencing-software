@@ -1,0 +1,223 @@
+/* TeamsPoolPanel.java
+ * =========================================================================
+ * This file is part of the Fence project
+ * More info can be found at http://nvcleemp.wordpress.com
+ * 
+ * Copyright (C) 2010-2011 Nico Van Cleemput
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+package be.rheynaerde.pufmanager.gui;
+
+import be.rheynaerde.pufmanager.data.Fencer;
+import be.rheynaerde.pufmanager.data.Pool;
+import be.rheynaerde.pufmanager.data.PoolResult;
+import be.rheynaerde.pufmanager.data.Team;
+import be.rheynaerde.pufmanager.data.listener.PoolAdapter;
+import be.rheynaerde.pufmanager.data.listener.PoolListener;
+import be.rheynaerde.pufmanager.data.util.PoolRowHeaderTableModel;
+import be.rheynaerde.pufmanager.data.util.TeamsPoolTableModel;
+import be.rheynaerde.pufmanager.gui.pool.PoolResultTableCellEditor;
+
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.GridLayout;
+import java.util.HashMap;
+import java.util.Map;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.SwingConstants;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableColumnModel;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
+
+/**
+ *
+ * @author nvcleemp
+ */
+public class TeamsPoolPanel extends JPanel {
+
+    private Pool pool;
+    private PoolListener poolListener = new PoolAdapter() {
+
+        @Override
+        public void fencerAdded(Fencer fencer) {
+            calculateRowHeaderColumnWidth();
+            calculatePoolTableColumnWidth();
+        }
+
+        @Override
+        public void fencerMoved(Fencer fencer) {
+            calculateRowHeaderColumnWidth();
+            calculatePoolTableColumnWidth();
+        }
+
+        @Override
+        public void fencerRemoved(Fencer fencer) {
+            calculateRowHeaderColumnWidth();
+            calculatePoolTableColumnWidth();
+        }
+
+        @Override
+        public void fencersChanged() {
+            calculateRowHeaderColumnWidth();
+            calculatePoolTableColumnWidth();
+        }
+    };
+    private JTable rowHeader;
+    private JTable poolTable;
+    private Map<Fencer, Team> fencer2team = new HashMap<Fencer, Team>();
+
+    public TeamsPoolPanel(Pool pool, Team... teams) {
+        super(new GridLayout(0, 1));
+        this.pool = pool;
+        initGui(teams);
+        for (Team team : teams) {
+            for (int i = 0; i < team.getTeamSize(); i++) {
+                fencer2team.put(team.getFencer(i), team);
+            }
+        }
+        pool.addPoolListener(poolListener);
+    }
+
+    public TeamsPoolPanel(Pool pool, Team team1, Team team2) {
+        super(new GridLayout(0, 1));
+        this.pool = pool;
+        Team[] teams = {team1, team2};
+        initGui(teams);
+        for (Team team : teams) {
+            for (int i = 0; i < team.getTeamSize(); i++) {
+                fencer2team.put(team.getFencer(i), team);
+            }
+        }
+        pool.addPoolListener(poolListener);
+    }
+
+    protected final void initGui(Team[] teams) {
+        poolTable = new JTable(new TeamsPoolTableModel(pool, teams));
+
+        //renderers
+        poolTable.setDefaultRenderer(PoolResult.class, new PoolResultTableCellRenderer());
+        poolTable.setDefaultRenderer(Object.class, new PoolTableCellRenderer());
+
+        //editor
+        final PoolResultTableCellEditor poolResultTableCellEditor =
+                new PoolResultTableCellEditor(pool.getMaximumScore());
+        pool.addPoolListener(new PoolAdapter() {
+            @Override
+            public void maximumScoreChanged() {
+                poolResultTableCellEditor.setMaximumScore(pool.getMaximumScore());
+            }
+        });
+        poolTable.setDefaultEditor(PoolResult.class, poolResultTableCellEditor);
+
+        //layout
+        poolTable.setRowHeight(poolTable.getRowHeight()*2);
+        calculatePoolTableColumnWidth();
+        JScrollPane poolPane = new JScrollPane(poolTable,
+                JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+                JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        rowHeader = new JTable(new PoolRowHeaderTableModel(pool)){
+
+            @Override
+            public Dimension getPreferredScrollableViewportSize() {
+                return getPreferredSize();
+            }
+        };
+        rowHeader.setRowHeight(rowHeader.getRowHeight()*2);
+        calculateRowHeaderColumnWidth();
+        poolPane.setRowHeaderView(rowHeader);
+        rowHeader.setSelectionModel(poolTable.getSelectionModel());
+        add(poolPane);
+    }
+
+    protected final void calculateRowHeaderColumnWidth() {
+        rowHeader.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+
+        for (int i = 0; i < rowHeader.getColumnCount(); i++) {
+            DefaultTableColumnModel colModel = (DefaultTableColumnModel) rowHeader.getColumnModel();
+            TableColumn col = colModel.getColumn(i);
+            int width = 0;
+
+            TableCellRenderer renderer = col.getHeaderRenderer();
+            for (int r = 0; r < rowHeader.getRowCount(); r++) {
+                renderer = rowHeader.getCellRenderer(r, i);
+                Component comp = renderer.getTableCellRendererComponent(rowHeader, rowHeader.getValueAt(r, i),
+                        false, false, r, i);
+                width = Math.max(width, comp.getPreferredSize().width);
+            }
+            col.setPreferredWidth(width + 2);
+        }
+    }
+
+    protected final void calculatePoolTableColumnWidth() {
+        poolTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+
+        for (int i = 0; i < poolTable.getColumnCount(); i++) {
+            DefaultTableColumnModel colModel = (DefaultTableColumnModel) poolTable.getColumnModel();
+            colModel.getColumn(i).setPreferredWidth(poolTable.getRowHeight());
+        }
+    }
+
+    private static class PoolTableCellRenderer extends DefaultTableCellRenderer {
+
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+            super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+            setHorizontalAlignment(SwingConstants.CENTER);
+            setVerticalAlignment(SwingConstants.CENTER);
+            setBackground(Color.LIGHT_GRAY);
+            return this;
+        }
+
+    }
+
+    private class PoolResultTableCellRenderer extends DefaultTableCellRenderer {
+
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+            super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+            
+            if(fencer2team.get(pool.getFencerAt(column)).equals(fencer2team.get(pool.getFencerAt(row))))
+                setBackground(Color.BLACK);
+            else if(value == null && table.getValueAt(column, row)!=null)
+                setBackground(Color.YELLOW);
+            else if(value != null && table.getValueAt(column, row)!=null
+                    && !validatePoolResults((PoolResult)value,
+                                           (PoolResult)table.getValueAt(column, row)))
+                setBackground(Color.RED);
+            else if(!isSelected)
+                setBackground(Color.WHITE);
+
+            setHorizontalAlignment(SwingConstants.CENTER);
+            setVerticalAlignment(SwingConstants.CENTER);
+            return this;
+        }
+
+        private boolean validatePoolResults(PoolResult a, PoolResult b){
+            if(a.isVictory() == b.isVictory())
+                return false;
+            else if((a.isVictory() && a.getScore()<b.getScore()) ||
+                    (b.isVictory() && b.getScore()<a.getScore()))
+                return false;
+            else
+                return true;
+        }
+
+    }
+}
