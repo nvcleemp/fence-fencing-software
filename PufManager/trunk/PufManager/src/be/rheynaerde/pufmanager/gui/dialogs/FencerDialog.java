@@ -140,9 +140,10 @@ public class FencerDialog extends JDialog {
     }
 
     public Fencer getData(Fencer fencer){
-        //TODO
-        throw new UnsupportedOperationException("Fencer is currently immutable.");
-        //return fencer;
+        fencer.setData(
+                name.getText(), 
+                club.getText().trim().equals("")? null : club.getText());
+        return fencer;
     }
 
     public boolean showDialog(){
