@@ -23,8 +23,10 @@ package be.rheynaerde.pufmanager.io;
 
 import be.rheynaerde.pufmanager.data.Competition;
 import be.rheynaerde.pufmanager.data.Fencer;
+import be.rheynaerde.pufmanager.data.Match;
 import be.rheynaerde.pufmanager.data.Round;
 import be.rheynaerde.pufmanager.data.Team;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -37,7 +39,8 @@ import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
 
 /**
- *
+ * Utility class that provides methods to save a competition to an XML file.
+ * TODO: document this XML format.
  * @author nvcleemp
  */
 public class CompetitionSaver {
@@ -73,6 +76,9 @@ public class CompetitionSaver {
             roundsElement.addContent(roundToElement(competition.getRound(i),teamIds));
         }
         competitionElement.addContent(roundsElement);
+        
+        //pool
+        //TODO: also include results in saved competition
 
         return competitionElement;
     }
@@ -98,15 +104,31 @@ public class CompetitionSaver {
     }
 
     private static Element roundToElement(Round round, Map<Team, Integer> teamIds){
-
-
+        Element roundElement = new Element("round");
+        roundElement.setAttribute("number", Integer.toString(round.getRoundNumber()));
+        roundElement.setAttribute("internal", Boolean.toString(round.includeInternalBouts()));
+        
+        //matches
+        Element matchesElement = new Element("matches");
+        for (Match match : round.getMatches()) {
+            Element matchElement = new Element("match");
+            matchElement.addContent(new Element("team1")
+                        .setAttribute("id", teamIds.get(match.getFirstTeam()).toString()));
+            matchElement.addContent(new Element("team2")
+                        .setAttribute("id", teamIds.get(match.getSecondTeam()).toString()));
+            matchesElement.addContent(matchElement);
+        }
+        roundElement.addContent(matchesElement);
+        
+        //single teams
         Element singleTeamMatchesElement = new Element("singleteam");
         for (Team team : round.getRestingTeams()) {
             singleTeamMatchesElement.addContent(
                     new Element("team")
                         .setAttribute("id", teamIds.get(team).toString()));
         }
-        //TODO: finish this
-        return singleTeamMatchesElement;
+        roundElement.addContent(singleTeamMatchesElement);
+        
+        return roundElement;
     }
 }
