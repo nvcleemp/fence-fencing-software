@@ -22,6 +22,7 @@
 package be.rheynaerde.pufmanager.io;
 
 import be.rheynaerde.pufmanager.data.Competition;
+import be.rheynaerde.pufmanager.data.CompetitionSettings;
 import be.rheynaerde.pufmanager.data.Fencer;
 import be.rheynaerde.pufmanager.data.Match;
 import be.rheynaerde.pufmanager.data.Round;
@@ -58,6 +59,9 @@ public class CompetitionSaver {
     private static Element competitionToElement(Competition competition){
         Element competitionElement = new Element("competition");
 
+        //settings
+        competitionElement.addContent(settingsToElement(competition.getSettings()));
+        
         //fencers
         Element fencersElement = new Element("fencers");
         Element teamsElement = new Element("teams");
@@ -85,6 +89,36 @@ public class CompetitionSaver {
         //TODO: also include results in saved competition
 
         return competitionElement;
+    }
+    
+    private static Element settingsToElement(CompetitionSettings settings){
+        Element settingsElement = new Element("settings");
+        
+        //title
+        settingsElement.addContent(
+                new Element("title").setAttribute(
+                                    "value",
+                                    settings.getTitle()));
+        settingsElement.addContent(
+                new Element("subtitle").setAttribute(
+                                    "value",
+                                    settings.getSubtitle()));
+        if(settings.getImageUrl()!=null){
+            settingsElement.addContent(
+                    new Element("image").setAttribute(
+                                        "value", 
+                                        settings.getImageUrl().toString()));
+        }
+        settingsElement.addContent(
+                new Element("max").setAttribute(
+                                    "value", 
+                                    Integer.toString(settings.getMaximumScore())));
+        settingsElement.addContent(
+                new Element("locale").setAttribute(
+                                    "value", 
+                                    settings.getLocale().toString()));
+        
+        return settingsElement;
     }
 
     private static Element teamToElement(Team team, int id){
