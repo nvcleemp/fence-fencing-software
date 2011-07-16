@@ -21,9 +21,15 @@
 
 package be.rheynaerde.pufmanager.gui;
 
+import be.rheynaerde.pufmanager.data.Match;
 import be.rheynaerde.pufmanager.data.Round;
+import be.rheynaerde.pufmanager.data.Team;
+import be.rheynaerde.pufmanager.gui.dialogs.PoolDialog;
+
 import java.awt.Color;
 import java.awt.GridLayout;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ResourceBundle;
 import javax.swing.BorderFactory;
 import javax.swing.GroupLayout;
@@ -54,13 +60,48 @@ public class RoundPanel extends JPanel{
         roundNumber.setBorder(BorderFactory.createLineBorder(Color.BLACK, 3));
         JLabel labelMatches = new JLabel(BUNDLE.getString("roundpanel.matchlist.label"));
         labelMatches.setVerticalAlignment(JLabel.TOP);
-        JList matchesList = new JList(round.getMatchesModel());
+        final JList matchesList = new JList(round.getMatchesModel());
         matchesList.setOpaque(false);
         matchesList.setCellRenderer(new MatchListCellRenderer());
         matchesList.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        matchesList.addMouseListener(new MouseAdapter() {
+
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if(e.getClickCount()>=2){
+                    if(matchesList.getSelectedIndex() >= 0 &&
+                            matchesList.getSelectedIndex() <
+                                        round.getMatches().size()){
+                        Match match = round.getMatches()
+                                .get(matchesList.getSelectedIndex());
+                        PoolDialog.showPoolDialog(match, round
+                                .getCompetition().getCompetitionPool());
+                    }
+                }
+            }
+        });
+        
         JLabel labelResting = new JLabel(BUNDLE.getString("roundpanel.restingteamlist.label"));
         labelResting.setVerticalAlignment(JLabel.TOP);
-        JList restingList = new JList(round.getRestingTeamsModel());
+        final JList restingList = new JList(round.getRestingTeamsModel());
+        if(round.includeInternalBouts()){
+            restingList.addMouseListener(new MouseAdapter() {
+
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    if(e.getClickCount()>=2){
+                        if(restingList.getSelectedIndex() >= 0 &&
+                                restingList.getSelectedIndex() <
+                                            round.getRestingTeams().size()){
+                            Team team = round.getRestingTeams()
+                                    .get(restingList.getSelectedIndex());
+                            PoolDialog.showPoolDialog(team, round
+                                    .getCompetition().getCompetitionPool());
+                        }
+                    }
+                }
+            });
+        }
         restingList.setOpaque(false);
         restingList.setCellRenderer(new RoundsViewListCellRenderer());
         restingList.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
