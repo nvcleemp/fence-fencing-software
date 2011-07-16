@@ -45,6 +45,10 @@ import org.jdom.output.XMLOutputter;
  */
 public class CompetitionSaver {
 
+    private CompetitionSaver() {
+        //don't instantiate this class
+    }
+
     public static void exportCompetition(Competition competition, File f) throws IOException{
         Document document = new Document(competitionToElement(competition));
         OutputStream out = new FileOutputStream(f);
