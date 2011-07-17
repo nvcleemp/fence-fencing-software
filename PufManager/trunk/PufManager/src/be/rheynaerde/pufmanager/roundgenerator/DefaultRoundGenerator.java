@@ -19,7 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package be.rheynaerde.pufmanager;
+package be.rheynaerde.pufmanager.roundgenerator;
 
 import be.rheynaerde.pufmanager.data.Competition;
 import be.rheynaerde.pufmanager.data.Match;

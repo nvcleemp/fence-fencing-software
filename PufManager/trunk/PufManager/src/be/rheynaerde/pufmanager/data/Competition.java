@@ -21,7 +21,7 @@
 
 package be.rheynaerde.pufmanager.data;
 
-import be.rheynaerde.pufmanager.DefaultRoundGenerator;
+import be.rheynaerde.pufmanager.roundgenerator.DefaultRoundGenerator;
 import be.rheynaerde.pufmanager.data.listener.CompetitionListener;
 import be.rheynaerde.pufmanager.data.listener.TeamAdapter;
 import be.rheynaerde.pufmanager.data.listener.TeamListener;
