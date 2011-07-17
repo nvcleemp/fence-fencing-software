@@ -90,6 +90,13 @@ public class Competition {
         this.competitionPool = new CompetitionPool(this);
     }
 
+    private Competition(List<Round> rounds, List<Team> teams, List<Fencer> fencers, CompetitionSettings settings) {
+        this.rounds = rounds;
+        this.teams = teams;
+        this.fencers = fencers;
+        this.settings = settings;
+    }
+
     public void addTeam(Team team){
         if(team!=null && !teams.contains(team)){
             teams.add(team);
@@ -222,5 +229,9 @@ public class Competition {
 
     public void removeListener(CompetitionListener listener){
         listeners.remove(listener);
+    }
+    
+    public static Competition constructCompetition(List<Fencer> unassignedFencers, List<Team> teams, List<Round> rounds, CompetitionSettings settings){
+        return new Competition(rounds, teams, unassignedFencers, settings);
     }
 }
