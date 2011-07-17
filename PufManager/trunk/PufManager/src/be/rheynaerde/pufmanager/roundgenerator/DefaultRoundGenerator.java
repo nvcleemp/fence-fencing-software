@@ -32,8 +32,9 @@ import java.util.List;
  *
  * @author nvcleemp
  */
-public class DefaultRoundGenerator {
+public class DefaultRoundGenerator implements RoundGenerator {
 
+    @Override
     public List<Round> getRounds(Competition competition){
         List<Team> teams = new ArrayList<Team>();
         for (int i = 0; i < competition.getTeamCount(); i++) {

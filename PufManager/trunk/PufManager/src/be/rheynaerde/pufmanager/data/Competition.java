@@ -25,6 +25,7 @@ import be.rheynaerde.pufmanager.roundgenerator.DefaultRoundGenerator;
 import be.rheynaerde.pufmanager.data.listener.CompetitionListener;
 import be.rheynaerde.pufmanager.data.listener.TeamAdapter;
 import be.rheynaerde.pufmanager.data.listener.TeamListener;
+import be.rheynaerde.pufmanager.roundgenerator.RoundGenerator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,10 +71,7 @@ public class Competition {
     }
 
     public Competition(CompetitionSettings settings) {
-        this.teams = new ArrayList<Team>();
-        rounds = drg.getRounds(this);
-        this.settings = settings;
-        this.competitionPool = new CompetitionPool(this);
+        this(new DefaultRoundGenerator(), new ArrayList<Team>(), null, settings);
     }
 
     public Competition(List<Team> teams) {
@@ -81,20 +79,18 @@ public class Competition {
     }
 
     public Competition(List<Team> teams, CompetitionSettings settings) {
+        this(new DefaultRoundGenerator(), teams, null, settings);
+    }
+
+    private Competition(RoundGenerator roundGenerator, List<Team> teams, List<Fencer> fencers, CompetitionSettings settings) {
         this.teams = new ArrayList<Team>(teams);
         for (Team team : teams) {
             team.addListener(teamListener);
         }
-        rounds = drg.getRounds(this);
-        this.settings = settings;
-        this.competitionPool = new CompetitionPool(this);
-    }
-
-    private Competition(List<Round> rounds, List<Team> teams, List<Fencer> fencers, CompetitionSettings settings) {
-        this.rounds = rounds;
-        this.teams = teams;
         this.fencers = fencers;
         this.settings = settings;
+        this.rounds = roundGenerator.getRounds(this);
+        this.competitionPool = new CompetitionPool(this);
     }
 
     public void addTeam(Team team){
@@ -231,7 +227,7 @@ public class Competition {
         listeners.remove(listener);
     }
     
-    public static Competition constructCompetition(List<Fencer> unassignedFencers, List<Team> teams, List<Round> rounds, CompetitionSettings settings){
-        return new Competition(rounds, teams, unassignedFencers, settings);
+    public static Competition constructCompetition(RoundGenerator roundGenerator, List<Fencer> unassignedFencers, List<Team> teams, CompetitionSettings settings){
+        return new Competition(roundGenerator, teams, unassignedFencers, settings);
     }
 }
