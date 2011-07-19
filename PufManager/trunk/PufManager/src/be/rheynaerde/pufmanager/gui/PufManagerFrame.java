@@ -30,16 +30,12 @@ import be.rheynaerde.pufmanager.gui.actions.ImportTextFile;
 import be.rheynaerde.pufmanager.gui.actions.SaveCompetitionAction;
 import be.rheynaerde.pufmanager.gui.dialogs.SettingsDialog;
 import be.rheynaerde.pufmanager.gui.teamcreator.TeamCreator;
-import be.rheynaerde.pufmanager.io.CompetitionSaver;
 
 import java.awt.BorderLayout;
 import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
-import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.AbstractAction;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
