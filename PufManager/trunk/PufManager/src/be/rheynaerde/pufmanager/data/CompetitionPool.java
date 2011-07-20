@@ -60,6 +60,7 @@ public class CompetitionPool extends DefaultPool{
         this.competition = competition;
         competition.addListener(competitionListener);
         competition.getSettings().addListener(competitionSettingsListener);
+        updateFencers();
     }
 
     private void updateFencers(){
