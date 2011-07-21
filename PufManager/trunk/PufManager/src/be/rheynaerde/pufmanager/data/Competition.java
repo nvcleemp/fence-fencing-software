@@ -71,7 +71,7 @@ public class Competition {
     }
 
     public Competition(CompetitionSettings settings) {
-        this(new DefaultRoundGenerator(), new ArrayList<Team>(), null, settings);
+        this(new DefaultRoundGenerator(), new ArrayList<Team>(), new ArrayList<Fencer>(), settings);
     }
 
     public Competition(List<Team> teams) {
@@ -87,7 +87,7 @@ public class Competition {
         for (Team team : teams) {
             team.addListener(teamListener);
         }
-        this.fencers = fencers;
+        this.unassignedFencers = fencers;
         this.settings = settings;
         this.rounds = roundGenerator.getRounds(this);
         this.competitionPool = new CompetitionPool(this);
