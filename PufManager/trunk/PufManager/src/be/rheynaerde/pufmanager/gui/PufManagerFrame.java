@@ -31,18 +31,22 @@ import be.rheynaerde.pufmanager.gui.actions.SaveCompetitionAction;
 import be.rheynaerde.pufmanager.gui.dialogs.SettingsDialog;
 import be.rheynaerde.pufmanager.gui.teamcreator.TeamCreator;
 
-import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.GridLayout;
 import java.awt.HeadlessException;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.text.MessageFormat;
 import java.util.ResourceBundle;
 import javax.swing.AbstractAction;
+import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
+import javax.swing.Scrollable;
 
 /**
  *
@@ -75,14 +79,16 @@ public class PufManagerFrame extends JFrame {
 
     private void initGui(){
         initMenuBar();
-        setLayout(new BorderLayout());
-        JTabbedPane tabs = new JTabbedPane();
+        setLayout(new GridLayout(1,1));
+        FrameTrackingTabbedPane tabs = new FrameTrackingTabbedPane();
         tabs.addTab(BUNDLE.getString("pufmanager.tabs.teams"), new TeamCreator(competition));
         tabs.addTab(BUNDLE.getString("pufmanager.tabs.rounds"), new JScrollPane(new RoundsView(competition),
                 JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
                 JScrollPane.HORIZONTAL_SCROLLBAR_NEVER));
         tabs.addTab(BUNDLE.getString("pufmanager.tabs.pool"), new PoolPanel(competition.getCompetitionPool()));
-        add(tabs, BorderLayout.CENTER);
+        final JScrollPane scrollPane = new JScrollPane(tabs);
+        scrollPane.setBorder(BorderFactory.createEmptyBorder());
+        add(scrollPane);
     }
 
     private void initMenuBar(){
@@ -112,5 +118,29 @@ public class PufManagerFrame extends JFrame {
         });
         bar.add(actionsMenu);
         setJMenuBar(bar);
+    }
+    
+    private static class FrameTrackingTabbedPane extends JTabbedPane implements Scrollable {
+
+        public Dimension getPreferredScrollableViewportSize() {
+            return getPreferredSize();
+        }
+
+        public int getScrollableUnitIncrement(Rectangle visibleRect, int orientation, int direction) {
+            return 0;
+        }
+
+        public int getScrollableBlockIncrement(Rectangle visibleRect, int orientation, int direction) {
+            return 0;
+        }
+
+        public boolean getScrollableTracksViewportWidth() {
+            return true;
+        }
+
+        public boolean getScrollableTracksViewportHeight() {
+            return true;
+        }
+        
     }
 }
