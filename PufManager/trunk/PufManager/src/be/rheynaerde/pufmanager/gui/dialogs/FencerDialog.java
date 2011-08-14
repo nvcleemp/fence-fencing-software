@@ -53,6 +53,7 @@ public class FencerDialog extends JDialog {
 
     private JTextField name = new JTextField();
     private JTextField club = new JTextField();
+    private JTextField id = new JTextField();
 
     private String lastPressed = OK_BUTTON;
 
@@ -86,11 +87,15 @@ public class FencerDialog extends JDialog {
         nameLabel.setLabelFor(name);
         JLabel clubLabel = new JLabel(BUNDLE.getString("fencerdialog.club") + ":");
         clubLabel.setLabelFor(club);
+        JLabel idLabel = new JLabel(BUNDLE.getString("fencerdialog.id") + ":");
+        idLabel.setLabelFor(id);
 
         name.setColumns(20);
         club.setColumns(20);
+        id.setColumns(20);
         SelectOnFocus.addTextComponent(name);
         SelectOnFocus.addTextComponent(club);
+        SelectOnFocus.addTextComponent(id);
 
         setLayout(new GridBagLayout());
 
@@ -117,6 +122,16 @@ public class FencerDialog extends JDialog {
         gbc.weightx = 1.0;
         add(club, gbc);
 
+        gbc.gridwidth = GridBagConstraints.RELATIVE;
+        gbc.fill = GridBagConstraints.NONE;
+        gbc.weightx = 0.0;
+        add(idLabel, gbc);
+
+        gbc.gridwidth = GridBagConstraints.REMAINDER;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.weightx = 1.0;
+        add(id, gbc);
+
         add(buttonsPanel, gbc);
         
         pack();
@@ -127,22 +142,29 @@ public class FencerDialog extends JDialog {
      * @return
      */
     public Fencer getNewFencer(){
-        if(club.getText().trim().equals("")){
-            return new Fencer(name.getText());
-        } else {
-            return new Fencer(name.getText(), club.getText());
+        String fencerName = name.getText().trim();
+        String fencerClub = null;
+        String fencerId = null;
+        if(!club.getText().trim().equals("")){
+            fencerClub = club.getText().trim();
         }
+        if(!id.getText().trim().equals("")){
+            fencerId = id.getText().trim();
+        }
+        return new Fencer(fencerName, fencerClub, fencerId);
     }
 
     public void setData(Fencer fencer){
         name.setText(fencer.getName());
         club.setText(fencer.getClub()==null ? "" : fencer.getClub());
+        id.setText(fencer.getId()==null ? "" : fencer.getId());
     }
 
     public Fencer getData(Fencer fencer){
         fencer.setData(
                 name.getText(), 
                 club.getText().trim().equals("")? null : club.getText());
+        fencer.setId(id.getText().trim().equals("")? null : id.getText());
         return fencer;
     }
 
