@@ -21,13 +21,15 @@
 
 package be.rheynaerde.pufmanager.data.listener;
 
+import be.rheynaerde.pufmanager.data.Fencer;
+
 /**
  *
  * @author nvcleemp
  */
 public interface FencerListener {
-    void nameChanged();
-    void clubChanged();
-    void dataChanged();
-    void idChanged();
+    void nameChanged(Fencer source);
+    void clubChanged(Fencer source);
+    void dataChanged(Fencer source);
+    void idChanged(Fencer source);
 }

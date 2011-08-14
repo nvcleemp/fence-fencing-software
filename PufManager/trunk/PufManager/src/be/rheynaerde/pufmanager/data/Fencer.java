@@ -119,25 +119,25 @@ public class Fencer {
 
     private void fireNameChanged() {
         for (FencerListener fencerListener : listeners) {
-            fencerListener.nameChanged();
+            fencerListener.nameChanged(this);
         }
     }
 
     private void fireClubChanged() {
         for (FencerListener fencerListener : listeners) {
-            fencerListener.clubChanged();
+            fencerListener.clubChanged(this);
         }
     }
     
     private void fireIdChanged() {
         for (FencerListener fencerListener : listeners) {
-            fencerListener.idChanged();
+            fencerListener.idChanged(this);
         }
     }
     
     private void fireDataChanged() {
         for (FencerListener fencerListener : listeners) {
-            fencerListener.dataChanged();
+            fencerListener.dataChanged(this);
         }
     }
 }
