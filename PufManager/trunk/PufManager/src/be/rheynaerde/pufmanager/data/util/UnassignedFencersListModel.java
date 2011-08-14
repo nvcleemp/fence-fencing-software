@@ -25,6 +25,8 @@ import be.rheynaerde.pufmanager.data.Competition;
 import be.rheynaerde.pufmanager.data.Fencer;
 import be.rheynaerde.pufmanager.data.listener.CompetitionAdapter;
 import be.rheynaerde.pufmanager.data.listener.CompetitionListener;
+import be.rheynaerde.pufmanager.data.listener.FencerListener;
+
 import javax.swing.AbstractListModel;
 
 /**
@@ -39,17 +41,43 @@ public class UnassignedFencersListModel extends AbstractListModel {
 
         @Override
         public void unassignedFencerAdded(Fencer fencer, int index) {
+            fencer.addFencerListener(fencerListener);
             fireIntervalAdded(this, index, index);
         }
 
         @Override
         public void unassignedFencerRemoved(Fencer fencer, int index) {
+            fencer.removeFencerListener(fencerListener);
             fireIntervalRemoved(this, index, index);
+        }
+    };
+    
+    private FencerListener fencerListener = new FencerListener() {
+
+        //TODO: determine position of fencer that is changed
+        
+        public void nameChanged(Fencer source) {
+            fireContentsChanged(this, 0, getSize()-1);
+        }
+
+        public void clubChanged(Fencer source) {
+            fireContentsChanged(this, 0, getSize()-1);
+        }
+
+        public void dataChanged(Fencer source) {
+            fireContentsChanged(this, 0, getSize()-1);
+        }
+
+        public void idChanged(Fencer source) {
+            //
         }
     };
 
     public UnassignedFencersListModel(Competition competition) {
         this.competition = competition;
+        for (int i = 0; i<competition.getNumberOfUnassignedFencers(); i++) {
+            competition.getUnassignedFencer(i).addFencerListener(fencerListener);
+        }
         competition.addListener(competitionListener);
     }
 
