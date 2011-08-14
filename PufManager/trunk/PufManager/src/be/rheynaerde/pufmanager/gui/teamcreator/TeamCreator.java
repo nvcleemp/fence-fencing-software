@@ -22,15 +22,19 @@
 package be.rheynaerde.pufmanager.gui.teamcreator;
 
 import be.rheynaerde.pufmanager.data.Competition;
+import be.rheynaerde.pufmanager.data.Fencer;
 import be.rheynaerde.pufmanager.data.Team;
 import be.rheynaerde.pufmanager.data.listener.CompetitionAdapter;
 import be.rheynaerde.pufmanager.data.listener.CompetitionListener;
 import be.rheynaerde.pufmanager.data.util.UnassignedFencersListModel;
+import be.rheynaerde.pufmanager.gui.dialogs.FencerDialog;
 import be.rheynaerde.pufmanager.util.ScrollablePanel;
 
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -129,7 +133,24 @@ public class TeamCreator extends JPanel {
     private JPanel createUnassignedFencersPanel(){
         JPanel panel = new JPanel(new BorderLayout(0, 5));
         panel.setBorder(getTitledBorder(BUNDLE.getString("teamcreator.unassigned.title")));
-        JList list = new JList(unassignedFencersModel);
+        final JList list = new JList(unassignedFencersModel);
+        list.addMouseListener(new MouseAdapter() {
+
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if(e.getClickCount()>=2){
+                    if(list.getSelectedIndex() >= 0 &&
+                            list.getSelectedIndex() < unassignedFencersModel.getSize()){
+                        Fencer fencer = unassignedFencersModel.getElementAt(list.getSelectedIndex());
+                        
+                        FencerDialog dialog = new FencerDialog();
+                        dialog.setData(fencer);
+                        if(dialog.showDialog())
+                            dialog.getData(fencer);
+                    }
+                }
+            }
+        });
         list.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
         unassignedFencersSelectionModel = list.getSelectionModel();
         panel.add(new JScrollPane(list), BorderLayout.CENTER);
