@@ -32,6 +32,7 @@ public class Fencer {
 
     private String name;
     private String club;
+    private String id;
     private List<FencerListener> listeners = new ArrayList<FencerListener>();
 
     public Fencer(String name) {
@@ -46,12 +47,21 @@ public class Fencer {
         this.club = club;
     }
 
+    public Fencer(String name, String club, String id) {
+        this(name, club);
+        this.id = id;
+    }
+
     public String getClub() {
         return club;
     }
 
     public String getName() {
         return name;
+    }
+
+    public String getId() {
+        return id;
     }
 
     public void setClub(String club) {
@@ -68,6 +78,13 @@ public class Fencer {
         if (!name.equals(this.name)) {
             this.name = name;
             fireNameChanged();
+        }
+    }
+
+    public void setId(String id) {
+        if(id == null ? this.id != null : !id.equals(this.id)){
+            this.id = id;
+            fireIdChanged();
         }
     }
     
@@ -109,6 +126,12 @@ public class Fencer {
     private void fireClubChanged() {
         for (FencerListener fencerListener : listeners) {
             fencerListener.clubChanged();
+        }
+    }
+    
+    private void fireIdChanged() {
+        for (FencerListener fencerListener : listeners) {
+            fencerListener.idChanged();
         }
     }
     

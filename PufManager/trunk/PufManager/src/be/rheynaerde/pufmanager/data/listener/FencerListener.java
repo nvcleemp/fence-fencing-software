@@ -29,4 +29,5 @@ public interface FencerListener {
     void nameChanged();
     void clubChanged();
     void dataChanged();
+    void idChanged();
 }
