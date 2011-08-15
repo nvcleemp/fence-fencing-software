@@ -27,11 +27,14 @@ import be.rheynaerde.pufmanager.data.CompetitionSettings.Setting;
 import be.rheynaerde.pufmanager.data.listener.CompetitionSettingsListener;
 import be.rheynaerde.pufmanager.gui.actions.CreateRoundsPdfAction;
 import be.rheynaerde.pufmanager.gui.actions.ImportTextFile;
+import be.rheynaerde.pufmanager.gui.actions.LoadCompetitionAction;
 import be.rheynaerde.pufmanager.gui.actions.SaveCompetitionAction;
 import be.rheynaerde.pufmanager.gui.dialogs.SettingsDialog;
 import be.rheynaerde.pufmanager.gui.teamcreator.TeamCreator;
 
+import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.EventQueue;
 import java.awt.GridLayout;
 import java.awt.HeadlessException;
 import java.awt.Rectangle;
@@ -94,7 +97,7 @@ public class PufManagerFrame extends JFrame {
     private void initMenuBar(){
         JMenuBar bar = new JMenuBar();
         JMenu fileMenu = new JMenu(BUNDLE.getString("pufmanager.menu.file"));
-        fileMenu.add(new JMenuItem(BUNDLE.getString("pufmanager.menu.file.open")));
+        fileMenu.add(new JMenuItem(new LoadCompetitionAction(this)));
         fileMenu.add(new JMenuItem(new SaveCompetitionAction(this, competition)));
         fileMenu.addSeparator();
         fileMenu.add(new ImportTextFile(this, competition));
@@ -118,6 +121,38 @@ public class PufManagerFrame extends JFrame {
         });
         bar.add(actionsMenu);
         setJMenuBar(bar);
+    }
+    
+    private void resetGui(){
+        setVisible(false);
+        setTitle(MessageFormat.format(BUNDLE.getString("pufmanager.title"),
+                competition.getSettings().getTitle(),
+                competition.getSettings().getSubtitle()));
+        this.competition.getSettings().addListener(new CompetitionSettingsListener() {
+
+            public void settingChanged(CompetitionSettings competitionSettings, Setting setting) {
+                if(Setting.SUBTITLE.equals(setting) || Setting.TITLE.equals(setting)){
+                    setTitle(MessageFormat.format(BUNDLE.getString("pufmanager.title"),
+                PufManagerFrame.this.competition.getSettings().getTitle(),
+                PufManagerFrame.this.competition.getSettings().getSubtitle()));
+                }
+            }
+        });
+        getContentPane().removeAll();
+        initGui();
+        pack();
+        setVisible(true);
+    }
+
+    public void setCompetition(Competition competition) {
+        if(competition!=null && !competition.equals(this.competition)){
+            this.competition = competition;
+            EventQueue.invokeLater(new Runnable() {
+                public void run() {
+                    resetGui();
+                }
+            });
+        }
     }
     
     private static class FrameTrackingTabbedPane extends JTabbedPane implements Scrollable {
