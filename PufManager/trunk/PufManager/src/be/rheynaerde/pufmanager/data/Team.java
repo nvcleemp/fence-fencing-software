@@ -66,6 +66,10 @@ public class Team {
     public int getTeamSize() {
         return fencers.size();
     }
+    
+    public int indexOf(Fencer fencer){
+        return fencers.indexOf(fencer);
+    }
 
     public Fencer getFencer(int index){
         return fencers.get(index);
