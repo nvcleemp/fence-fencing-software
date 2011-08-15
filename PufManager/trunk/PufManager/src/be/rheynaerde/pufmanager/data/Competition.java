@@ -71,7 +71,7 @@ public class Competition {
     }
 
     public Competition(CompetitionSettings settings) {
-        this(new DefaultRoundGenerator(), new ArrayList<Team>(), new ArrayList<Fencer>(), settings);
+        this(new DefaultRoundGenerator(), new ArrayList<Team>(), new ArrayList<Fencer>(), new ArrayList<WrappedPoolResult>(), settings);
     }
 
     public Competition(List<Team> teams) {
@@ -79,10 +79,10 @@ public class Competition {
     }
 
     public Competition(List<Team> teams, CompetitionSettings settings) {
-        this(new DefaultRoundGenerator(), teams, null, settings);
+        this(new DefaultRoundGenerator(), teams, null, new ArrayList<WrappedPoolResult>(), settings);
     }
 
-    private Competition(RoundGenerator roundGenerator, List<Team> teams, List<Fencer> fencers, CompetitionSettings settings) {
+    private Competition(RoundGenerator roundGenerator, List<Team> teams, List<Fencer> fencers, List<WrappedPoolResult> poolResults, CompetitionSettings settings) {
         this.teams = new ArrayList<Team>(teams);
         for (Team team : teams) {
             team.addListener(teamListener);
@@ -91,6 +91,9 @@ public class Competition {
         this.settings = settings;
         this.rounds = roundGenerator.getRounds(this);
         this.competitionPool = new CompetitionPool(this);
+        for (WrappedPoolResult wrappedPoolResult : poolResults) {
+            this.competitionPool.setResult(wrappedPoolResult.fencer, wrappedPoolResult.opponent, wrappedPoolResult.poolResult);
+        }
     }
 
     public void addTeam(Team team){
@@ -227,7 +230,43 @@ public class Competition {
         listeners.remove(listener);
     }
     
-    public static Competition constructCompetition(RoundGenerator roundGenerator, List<Fencer> unassignedFencers, List<Team> teams, CompetitionSettings settings){
-        return new Competition(roundGenerator, teams, unassignedFencers, settings);
+    public static Competition constructCompetition(RoundGenerator roundGenerator, List<Fencer> unassignedFencers, List<Team> teams, List<WrappedPoolResult> poolResults, CompetitionSettings settings){
+        return new Competition(roundGenerator, teams, unassignedFencers, poolResults, settings);
+    }
+    
+    public static final class WrappedPoolResult {
+        private Fencer fencer;
+        private Fencer opponent;
+        private PoolResult poolResult;
+
+        public WrappedPoolResult(Fencer fencer, Fencer opponent, PoolResult poolResult) {
+            this.fencer = fencer;
+            this.opponent = opponent;
+            this.poolResult = poolResult;
+        }
+
+        public Fencer getFencer() {
+            return fencer;
+        }
+
+        public void setFencer(Fencer fencer) {
+            this.fencer = fencer;
+        }
+
+        public Fencer getOpponent() {
+            return opponent;
+        }
+
+        public void setOpponent(Fencer opponent) {
+            this.opponent = opponent;
+        }
+
+        public PoolResult getPoolResult() {
+            return poolResult;
+        }
+
+        public void setPoolResult(PoolResult poolResult) {
+            this.poolResult = poolResult;
+        }
     }
 }

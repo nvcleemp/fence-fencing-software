@@ -25,6 +25,7 @@ import be.rheynaerde.pufmanager.data.Competition;
 import be.rheynaerde.pufmanager.data.CompetitionSettings;
 import be.rheynaerde.pufmanager.data.Fencer;
 import be.rheynaerde.pufmanager.data.Match;
+import be.rheynaerde.pufmanager.data.PoolResult;
 import be.rheynaerde.pufmanager.data.Round;
 import be.rheynaerde.pufmanager.data.Team;
 
@@ -34,6 +35,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -106,7 +108,28 @@ public class CompetitionSaver {
         competitionElement.addContent(roundsElement);
         
         //pool
-        //TODO: also include results in saved competition
+        Element poolElement = new Element("pool");
+        List<Fencer> competitionFencers = competition.getFencers();
+        for(int i = 0; i<competitionFencers.size()-1; i++){
+            for(int j = i+1; j<competitionFencers.size(); j++){
+                PoolResult result1 = competition.getCompetitionPool().getResult(competitionFencers.get(i), competitionFencers.get(j));
+                PoolResult result2 = competition.getCompetitionPool().getResult(competitionFencers.get(j), competitionFencers.get(i));
+                if(result1!=null && result2!=null){
+                    Element poolresult = new Element("poolresult");
+                    poolresult.setAttribute("fencer1", competitionFencers.get(i).getId());
+                    poolresult.setAttribute("fencer2", competitionFencers.get(j).getId());
+                    poolresult.setAttribute("score1", Integer.toString(result1.getScore()));
+                    poolresult.setAttribute("score2", Integer.toString(result2.getScore()));
+                    if(result1.isVictory()){
+                        poolresult.setAttribute("winner", competitionFencers.get(i).getId());
+                    } else {
+                        poolresult.setAttribute("winner", competitionFencers.get(j).getId());
+                    }
+                    poolElement.addContent(poolresult);
+                }
+            }
+        }
+        competitionElement.addContent(poolElement);
 
         return competitionElement;
     }

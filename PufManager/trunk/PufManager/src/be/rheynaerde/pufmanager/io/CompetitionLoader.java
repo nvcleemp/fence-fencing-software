@@ -24,6 +24,7 @@ package be.rheynaerde.pufmanager.io;
 import be.rheynaerde.pufmanager.data.Competition;
 import be.rheynaerde.pufmanager.data.CompetitionSettings;
 import be.rheynaerde.pufmanager.data.Fencer;
+import be.rheynaerde.pufmanager.data.PoolResult;
 import be.rheynaerde.pufmanager.data.Team;
 import be.rheynaerde.pufmanager.roundgenerator.FixedRoundGenerator;
 import java.io.File;
@@ -66,12 +67,13 @@ public class CompetitionLoader {
         
         //fencers
         Element fencersElement = root.getChild("fencers");
+        Map<String, Fencer> fencersMap = new HashMap<String, Fencer>();
         if(fencersElement!=null){
-            getTeamsFromElement(fencersElement.getChild("teams"), competition);
+            getTeamsFromElement(fencersElement.getChild("teams"), competition, fencersMap);
             Element unassignedFencers = fencersElement.getChild("unassigned");
             if(unassignedFencers!=null){
                 for (Object object : unassignedFencers.getChildren("fencer")) {
-                    competition.unassignedFencers.add(getFencerFromElement((Element)object));
+                    competition.unassignedFencers.add(getFencerFromElement((Element)object, fencersMap));
                 }
             }
         }
@@ -86,10 +88,17 @@ public class CompetitionLoader {
         }
         
         //pool
+        Element poolElement = root.getChild("pool");
+        if(poolElement!=null){
+            for (Object object : poolElement.getChildren("poolresult")) {
+                getPoolResultFromElement((Element)object, competition, fencersMap);
+            }
+        }
         
         return Competition.constructCompetition(competition.frg,
                                                 competition.unassignedFencers,
                                                 competition.teams,
+                                                competition.poolResults,
                                                 settings);
     }
     
@@ -124,15 +133,15 @@ public class CompetitionLoader {
         }
     }
     
-    private static void getTeamsFromElement(Element teamsElement, TemporaryCompetition comp){
+    private static void getTeamsFromElement(Element teamsElement, TemporaryCompetition comp, Map<String, Fencer> fencersMap){
         if(teamsElement==null) return;
         
         for (Object object : teamsElement.getChildren("team")) {
-            comp.teams.add(getTeamFromElement((Element)object, comp));
+            comp.teams.add(getTeamFromElement((Element)object, comp, fencersMap));
         }
     }
     
-    private static Team getTeamFromElement(Element teamElement, TemporaryCompetition comp){
+    private static Team getTeamFromElement(Element teamElement, TemporaryCompetition comp, Map<String, Fencer> fencersMap){
         if(teamElement==null){
             throw new IllegalArgumentException("Can't construct team from null");
         }
@@ -145,7 +154,7 @@ public class CompetitionLoader {
         
         List<Fencer> fencers = new ArrayList<Fencer>();
         for (Object object : teamElement.getChildren("fencer")) {
-            fencers.add(getFencerFromElement((Element)object));
+            fencers.add(getFencerFromElement((Element)object, fencersMap));
         }
         
         Team team = new Team(name, fencers);
@@ -154,7 +163,7 @@ public class CompetitionLoader {
         return team;
     }
     
-    private static Fencer getFencerFromElement(Element fencerElement){
+    private static Fencer getFencerFromElement(Element fencerElement, Map<String, Fencer> fencersMap){
         if(fencerElement==null){
             throw new IllegalArgumentException("Can't construct fencer from null");
         }
@@ -166,7 +175,9 @@ public class CompetitionLoader {
         } else if(name==null){
             throw new IllegalArgumentException("Fencer without identity");
         } else {
-            return new Fencer(name, club, id);
+            final Fencer fencer = new Fencer(name, club, id);
+            fencersMap.put(id, fencer);
+            return fencer;
         }
     }
     
@@ -215,11 +226,32 @@ public class CompetitionLoader {
         }
         frg.addMatch(roundNumber, team1, team2);
     }
+    
+    private static void getPoolResultFromElement(Element poolResultElement, TemporaryCompetition competition, Map<String, Fencer> fencersMap){
+        if(poolResultElement==null){
+            throw new IllegalArgumentException("Can't construct pool result from null");
+        }
+        Fencer fencer1 = fencersMap.get(poolResultElement.getAttributeValue("fencer1"));
+        Fencer fencer2 = fencersMap.get(poolResultElement.getAttributeValue("fencer2"));
+        if(fencer1==null || fencer2==null){
+            throw new IllegalArgumentException("Unknown fencer");
+        }
+        int score1 = Integer.parseInt(poolResultElement.getAttributeValue("score1"));
+        int score2 = Integer.parseInt(poolResultElement.getAttributeValue("score2"));
+        boolean victory1 = poolResultElement.getAttributeValue("fencer1").equals(poolResultElement.getAttributeValue("winner"));
+        boolean victory2 = poolResultElement.getAttributeValue("fencer2").equals(poolResultElement.getAttributeValue("winner"));
+        if(victory1==victory2){
+            throw new IllegalArgumentException("Bout without clear winner");
+        }
+        competition.poolResults.add(new Competition.WrappedPoolResult(fencer1, fencer2, new PoolResult(victory1, score1)));
+        competition.poolResults.add(new Competition.WrappedPoolResult(fencer2, fencer1, new PoolResult(victory2, score2)));
+    }
 
-    private static class TemporaryCompetition {
+    private static final class TemporaryCompetition {
         private List<Team> teams = new ArrayList<Team>();
         private Map<String, Team> teamsMap = new HashMap<String, Team>();
         private List<Fencer> unassignedFencers = new ArrayList<Fencer>();
         private FixedRoundGenerator frg;
+        private List<Competition.WrappedPoolResult> poolResults = new ArrayList<Competition.WrappedPoolResult>();
     }
 }
