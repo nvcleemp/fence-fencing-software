@@ -32,6 +32,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -108,6 +109,7 @@ public class CompetitionLoader {
             settings.setTitle(getStringFromValueElement(settingsElement.getChild("title"), ""));
             settings.setSubtitle(getStringFromValueElement(settingsElement.getChild("subtitle"), ""));
             settings.setMaximumScore(getIntFromValueElement(settingsElement.getChild("max"), 5));
+            settings.setLocale(getLocaleFromValueElement(settingsElement.getChild("locale"), Locale.getDefault()));
         }
         return settings;
     }
@@ -130,6 +132,23 @@ public class CompetitionLoader {
                 Logger.getLogger(CompetitionLoader.class.getName()).log(Level.SEVERE, null, numberFormatException);
                 return defaultValue;
             }
+        }
+    }
+    
+    private static Locale getLocaleFromValueElement(Element valueElement, Locale defaultValue){
+        if(valueElement==null || valueElement.getAttributeValue("value")==null){
+            return defaultValue;
+        } else {
+            String locale = valueElement.getAttributeValue("value");
+            String[] parts = locale.split("_");
+            String language = (parts.length > 0 ? parts[0] : null);
+            String country = (parts.length > 1 ? parts[1] : "");
+            String variant = (parts.length > 2 ? parts[2] : "");
+            if(language==null){
+                Logger.getLogger(CompetitionLoader.class.getName()).log(Level.SEVERE, "No language specified");
+                return defaultValue;
+            }
+            return new Locale(language, country, variant);
         }
     }
     
