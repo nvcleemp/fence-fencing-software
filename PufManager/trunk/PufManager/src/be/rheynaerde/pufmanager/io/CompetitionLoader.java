@@ -158,14 +158,15 @@ public class CompetitionLoader {
         if(fencerElement==null){
             throw new IllegalArgumentException("Can't construct fencer from null");
         }
+        String id = fencerElement.getAttributeValue("id");
         String name = fencerElement.getAttributeValue("name");
         String club = fencerElement.getAttributeValue("club");
-        if(name==null){
+        if(id==null){
+            throw new IllegalArgumentException("Fencer without id");
+        } else if(name==null){
             throw new IllegalArgumentException("Fencer without identity");
-        } else if (club==null){
-            return new Fencer(name);
         } else {
-            return new Fencer(name, club);
+            return new Fencer(name, club, id);
         }
     }
     

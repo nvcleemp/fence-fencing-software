@@ -32,6 +32,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import org.jdom.Document;
@@ -61,6 +62,25 @@ public class CompetitionSaver {
 
         //settings
         competitionElement.addContent(settingsToElement(competition.getSettings()));
+        
+        //fencer IDs
+        String idBase = Long.toHexString(new Date().getTime()) + "-";
+        int counter = 1;
+        for (int i=0; i<competition.getTeamCount(); i++) {
+            for (int j=0; j<competition.getTeam(i).getTeamSize();j++) {
+                if(competition.getTeam(i).getFencer(j).getId()==null){
+                    competition.getTeam(i).getFencer(j).setId(idBase + counter);
+                    counter++;
+                }
+            }
+        }
+        for (int i=0; i<competition.getNumberOfUnassignedFencers(); i++) {
+            if(competition.getUnassignedFencer(i).getId()==null){
+                competition.getUnassignedFencer(i).setId(idBase + counter);
+                counter++;
+            }
+        }
+        
         
         //fencers
         Element fencersElement = new Element("fencers");
@@ -138,6 +158,8 @@ public class CompetitionSaver {
             fencerElement.setAttribute("name", fencer.getName());
         if(fencer.getClub()!=null)
             fencerElement.setAttribute("club", fencer.getClub());
+        //ID is guarantueed to be non null
+        fencerElement.setAttribute("id", fencer.getId());
         return fencerElement;
     }
 
