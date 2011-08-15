@@ -24,13 +24,17 @@ package be.rheynaerde.pufmanager.gui.teamcreator;
 import be.rheynaerde.pufmanager.data.Competition;
 import be.rheynaerde.pufmanager.data.Fencer;
 import be.rheynaerde.pufmanager.data.Team;
+import be.rheynaerde.pufmanager.data.listener.FencerListener;
 import be.rheynaerde.pufmanager.data.listener.TeamAdapter;
 import be.rheynaerde.pufmanager.data.listener.TeamListener;
+import be.rheynaerde.pufmanager.gui.dialogs.FencerDialog;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
@@ -65,12 +69,14 @@ class SingleTeamPanel extends JPanel {
     private TeamListener teamListener = new TeamAdapter() {
         @Override
         public void fencerAdded(Fencer fencer, int index) {
+            fencer.addFencerListener(fencerListener);
             fencersModel.fencerAdded(index);
             checkTeamSize();
         }
 
         @Override
         public void fencerRemoved(Fencer fencer, int index) {
+            fencer.removeFencerListener(fencerListener);
             fencersModel.fencerRemoved(index);
             checkTeamSize();
         }
@@ -85,6 +91,29 @@ class SingleTeamPanel extends JPanel {
         @Override
         public void targetSizeChanged(int oldSize, int newSize) {
             checkTeamSize();
+        }
+    };
+    
+    private final FencerListener fencerListener = new FencerListener() {
+
+        public void nameChanged(Fencer source) {
+            int index = team.indexOf(source);
+            fencersModel.fencerChanged(index);
+        }
+
+        public void clubChanged(Fencer source) {
+            int index = team.indexOf(source);
+            fencersModel.fencerChanged(index);
+        }
+
+        public void dataChanged(Fencer source) {
+            int index = team.indexOf(source);
+            fencersModel.fencerChanged(index);
+        }
+
+        public void idChanged(Fencer source) {
+            int index = team.indexOf(source);
+            fencersModel.fencerChanged(index);
         }
     };
 
@@ -120,7 +149,7 @@ class SingleTeamPanel extends JPanel {
                     )
                 );
 
-        JList list = new JList(fencersModel){
+        final JList list = new JList(fencersModel){
 
             @Override
             public boolean getScrollableTracksViewportWidth() {
@@ -139,6 +168,23 @@ class SingleTeamPanel extends JPanel {
             }
         });
         teamFencerSelectionModel = list.getSelectionModel();
+        list.addMouseListener(new MouseAdapter() {
+
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if(e.getClickCount()>=2){
+                    if(list.getSelectedIndex() >= 0 &&
+                            list.getSelectedIndex() < fencersModel.getSize()){
+                        Fencer fencer = fencersModel.getElementAt(list.getSelectedIndex());
+                        
+                        FencerDialog dialog = new FencerDialog();
+                        dialog.setData(fencer);
+                        if(dialog.showDialog())
+                            dialog.getData(fencer);
+                    }
+                }
+            }
+        });
         JScrollPane listScrollPane = new JScrollPane(list);
 
         JButton addFencerButton = new JButton(new AddFencerAction());
@@ -313,7 +359,7 @@ class SingleTeamPanel extends JPanel {
             return team.getTeamSize();
         }
 
-        public Object getElementAt(int index) {
+        public Fencer getElementAt(int index) {
             return team.getFencer(index);
         }
 
@@ -325,6 +371,9 @@ class SingleTeamPanel extends JPanel {
             fireIntervalRemoved(this, index, index);
         }
 
+        public void fencerChanged(int index){
+            fireContentsChanged(this, index, index);
+        }
     }
 
 }
