@@ -24,6 +24,7 @@ package be.rheynaerde.pufmanager.gui.settings;
 import be.rheynaerde.pufmanager.data.CompetitionSettings;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -31,6 +32,7 @@ import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 import javax.swing.AbstractAction;
+import javax.swing.ComboBoxEditor;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.GroupLayout;
 import javax.swing.JButton;
@@ -40,6 +42,7 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.plaf.basic.BasicComboBoxEditor;
 
 /**
  *
@@ -70,6 +73,9 @@ public class SettingsPanel extends JPanel {
         titleField = new JTextField(settings.getTitle());
         subtitleField = new JTextField(settings.getSubtitle());
         langBox = new JComboBox(getAvailableLanguages());
+        langBox.setEditable(true);
+        langBox.setEditor(new LocaleEditor());
+        langBox.setSelectedItem(settings.getLocale());
         maxScoreField = new JFormattedTextField(settings.getMaximumScore());
 
         JButton saveButton = new JButton(new SaveAction());
@@ -126,7 +132,7 @@ public class SettingsPanel extends JPanel {
                 try {
                     setText(BUNDLE.getString(value.toString()));
                 } catch (MissingResourceException e) {
-                    setText(BUNDLE.getString("unknown.language"));
+                    setText(BUNDLE.getString("unknown.language") + value.toString());
                 }
                 return this;
             }
@@ -176,6 +182,44 @@ public class SettingsPanel extends JPanel {
 
     public static interface SettingsPanelListener {
         void settingsSaved();
+    }
+    
+    private static class LocaleEditor implements ComboBoxEditor {
+        
+        private BasicComboBoxEditor comboBoxEditor = new BasicComboBoxEditor();
+
+        public Component getEditorComponent() {
+            return comboBoxEditor.getEditorComponent();
+        }
+
+        public void setItem(Object anObject) {
+            if(anObject instanceof Locale){
+                Locale locale = (Locale)anObject;
+                comboBoxEditor.setItem(locale.toString());
+            }
+        }
+
+        public Object getItem() {
+            String locale = (String)comboBoxEditor.getItem();
+            String[] parts = locale.split("_");
+            String language = (parts.length > 0 ? parts[0] : null);
+            String country = (parts.length > 1 ? parts[1] : "");
+            String variant = (parts.length > 2 ? parts[2] : "");
+            return new Locale(language, country, variant);
+        }
+
+        public void selectAll() {
+            comboBoxEditor.selectAll();
+        }
+
+        public void addActionListener(ActionListener l) {
+            comboBoxEditor.addActionListener(l);
+        }
+
+        public void removeActionListener(ActionListener l) {
+            comboBoxEditor.removeActionListener(l);
+        }
+        
     }
 
 }
