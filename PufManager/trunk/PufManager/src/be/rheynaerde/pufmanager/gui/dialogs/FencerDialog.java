@@ -80,7 +80,7 @@ public class FencerDialog extends JDialog {
         JButton cancelButton = new JButton(BUNDLE.getString("fencerdialog.cancel"));
         cancelButton.addActionListener(new FencerDialogButtonActionListener(CANCEL_BUTTON));
         buttonsPanel.add(cancelButton);
-
+        
         
 
         JLabel nameLabel = new JLabel(BUNDLE.getString("fencerdialog.name") + ":");
@@ -96,6 +96,11 @@ public class FencerDialog extends JDialog {
         SelectOnFocus.addTextComponent(name);
         SelectOnFocus.addTextComponent(club);
         SelectOnFocus.addTextComponent(id);
+        
+        ActionListener textFieldListener = new FencerDialogButtonActionListener(OK_BUTTON);
+        name.addActionListener(textFieldListener);
+        club.addActionListener(textFieldListener);
+        id.addActionListener(textFieldListener);
 
         setLayout(new GridBagLayout());
 
