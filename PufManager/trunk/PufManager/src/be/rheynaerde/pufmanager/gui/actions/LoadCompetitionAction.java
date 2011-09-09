@@ -67,10 +67,6 @@ public class LoadCompetitionAction extends AbstractAction {
             }
             try {
                 Competition competition = CompetitionLoader.loadCompetition(f);
-                //TODO: change current PufManagerFrame
-                //JFrame frame = new PufManagerFrame(competition);
-                //frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-                //frame.setVisible(true);
                 parent.setCompetition(competition);
             } catch (IOException ex) {
                 Logger.getLogger(LoadCompetitionAction.class.getName()).log(Level.SEVERE, null, ex);
