@@ -27,6 +27,7 @@ import be.rheynaerde.pufmanager.data.listener.TeamAdapter;
 import be.rheynaerde.pufmanager.data.listener.TeamListener;
 import be.rheynaerde.pufmanager.roundgenerator.RoundGenerator;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -65,6 +66,8 @@ public class Competition {
     private DefaultRoundGenerator drg = new DefaultRoundGenerator();
 
     private final CompetitionSettings settings;
+    
+    private File saveFile = null;
 
     public Competition() {
         this(new CompetitionSettings());
@@ -182,6 +185,14 @@ public class Competition {
 
     public CompetitionSettings getSettings() {
         return settings;
+    }
+
+    public File getSaveFile() {
+        return saveFile;
+    }
+
+    public void setSaveFile(File saveFile) {
+        this.saveFile = saveFile;
     }
 
     protected void fireRoundsChanged(){

@@ -69,6 +69,8 @@ public class SaveCompetitionAction extends AbstractAction {
             //TODO: show warning if f exists
             try {
                 CompetitionSaver.exportCompetition(competition, f);
+                //if save was succesful we store the file
+                competition.setSaveFile(f);
             } catch (IOException ex) {
                 Logger.getLogger(SaveCompetitionAction.class.getName()).log(Level.SEVERE, null, ex);
             }

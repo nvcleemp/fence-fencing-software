@@ -67,6 +67,8 @@ public class LoadCompetitionAction extends AbstractAction {
             }
             try {
                 Competition competition = CompetitionLoader.loadCompetition(f);
+                //store the file from which this competition was loaded
+                competition.setSaveFile(f);
                 parent.setCompetition(competition);
             } catch (IOException ex) {
                 Logger.getLogger(LoadCompetitionAction.class.getName()).log(Level.SEVERE, null, ex);
