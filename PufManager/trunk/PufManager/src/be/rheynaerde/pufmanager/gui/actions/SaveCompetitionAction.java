@@ -48,16 +48,43 @@ public class SaveCompetitionAction extends AbstractAction {
 
     private JFrame parent;
     private Competition competition;
+    private boolean forceNewFile;
     private JFileChooser chooser = new JFileChooser(new File(System.getProperty("user.dir")));
 
     public SaveCompetitionAction(JFrame parent, Competition competition) {
-        super(BUNDLE.getString("save"));
+        this(parent, competition, false);
+    }
+    
+    public SaveCompetitionAction(JFrame parent, Competition competition, boolean forceNewFile) {
+        super(forceNewFile ? BUNDLE.getString("save.as") : BUNDLE.getString("save"));
         this.parent = parent;
         this.competition = competition;
+        this.forceNewFile = forceNewFile;
         chooser.addChoosableFileFilter(new FileNameExtensionFilter("Competition file", "xml"));
     }
 
     public void actionPerformed(ActionEvent e) {
+        File f = null;
+        if(!forceNewFile){
+            f = competition.getSaveFile();
+        }
+        if(f == null){
+            f = askUserForFile();
+        }
+        if(f == null){
+            //user canceled save dialog
+            return;
+        }
+        try {
+            CompetitionSaver.exportCompetition(competition, f);
+            //if save was succesful we store the file
+            competition.setSaveFile(f);
+        } catch (IOException ex) {
+            Logger.getLogger(SaveCompetitionAction.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    private File askUserForFile(){
         if(chooser.showSaveDialog(parent)==JFileChooser.APPROVE_OPTION){
             File f = chooser.getSelectedFile();
             if(!f.exists() && !f.getName().endsWith(".xml")){
@@ -67,14 +94,9 @@ public class SaveCompetitionAction extends AbstractAction {
                 }
             }
             //TODO: show warning if f exists
-            try {
-                CompetitionSaver.exportCompetition(competition, f);
-                //if save was succesful we store the file
-                competition.setSaveFile(f);
-            } catch (IOException ex) {
-                Logger.getLogger(SaveCompetitionAction.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            return f;
         }
+        return null;
     }
     
 }

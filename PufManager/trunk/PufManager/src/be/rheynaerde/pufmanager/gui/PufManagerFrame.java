@@ -32,7 +32,6 @@ import be.rheynaerde.pufmanager.gui.actions.SaveCompetitionAction;
 import be.rheynaerde.pufmanager.gui.dialogs.SettingsDialog;
 import be.rheynaerde.pufmanager.gui.teamcreator.TeamCreator;
 
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.GridLayout;
@@ -99,6 +98,7 @@ public class PufManagerFrame extends JFrame {
         JMenu fileMenu = new JMenu(BUNDLE.getString("pufmanager.menu.file"));
         fileMenu.add(new JMenuItem(new LoadCompetitionAction(this)));
         fileMenu.add(new JMenuItem(new SaveCompetitionAction(this, competition)));
+        fileMenu.add(new JMenuItem(new SaveCompetitionAction(this, competition, true)));
         fileMenu.addSeparator();
         fileMenu.add(new ImportTextFile(this, competition));
         fileMenu.addSeparator();
