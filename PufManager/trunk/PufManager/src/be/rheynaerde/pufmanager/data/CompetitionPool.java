@@ -58,6 +58,7 @@ public class CompetitionPool extends DefaultPool{
 
     public CompetitionPool(Competition competition) {
         this.competition = competition;
+        setMaximumScore(competition.getSettings().getMaximumScore());
         competition.addListener(competitionListener);
         competition.getSettings().addListener(competitionSettingsListener);
         updateFencers();
