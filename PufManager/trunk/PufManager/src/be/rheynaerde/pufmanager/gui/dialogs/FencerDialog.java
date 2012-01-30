@@ -23,8 +23,8 @@ package be.rheynaerde.pufmanager.gui.dialogs;
 
 import be.rheynaerde.pufmanager.data.Fencer;
 import be.rheynaerde.pufmanager.util.SelectOnFocus;
-import java.awt.Dimension;
 
+import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -41,7 +41,8 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 /**
- *
+ * Dialog that allows a user to create or edit a {@link Fencer} object.
+ * 
  * @author nvcleemp
  */
 public class FencerDialog extends JDialog {
