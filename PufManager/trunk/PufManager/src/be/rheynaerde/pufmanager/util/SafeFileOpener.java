@@ -35,7 +35,7 @@ import javax.swing.JOptionPane;
  */
 public class SafeFileOpener {
     
-    private static final ResourceBundle BUNDLE = ResourceBundle.getBundle("be.rheynaerde.pufmanager.gui.util.safefileopener");
+    private static final ResourceBundle BUNDLE = ResourceBundle.getBundle("be.rheynaerde.pufmanager.util.safefileopener");
 
     private JFileChooser chooser;
 
