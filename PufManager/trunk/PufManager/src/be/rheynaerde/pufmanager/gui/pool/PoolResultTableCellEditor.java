@@ -137,9 +137,9 @@ public class PoolResultTableCellEditor extends AbstractCellEditor
 
     public PoolResult parsePoolResult(String s) throws ParseException {
         String text = s.trim();
-        if(s.equals(""))
+        if(text.equals(""))
             return null;
-        if(s.equalsIgnoreCase("V"))
+        if(text.equalsIgnoreCase("V"))
             return new PoolResult(true, maxScore);
         
         boolean victory = (text.toUpperCase().charAt(0)=='V');
