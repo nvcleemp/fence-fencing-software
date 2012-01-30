@@ -24,6 +24,8 @@ package be.rheynaerde.pufmanager.gui.actions;
 import be.rheynaerde.pufmanager.data.Competition;
 import be.rheynaerde.pufmanager.io.CompetitionSaver;
 
+import be.rheynaerde.pufmanager.preferences.PufManagerPreferences;
+import be.rheynaerde.pufmanager.preferences.PufManagerPreferences.Preference;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.IOException;
@@ -49,7 +51,9 @@ public class SaveCompetitionAction extends AbstractAction {
     private JFrame parent;
     private Competition competition;
     private boolean forceNewFile;
-    private JFileChooser chooser = new JFileChooser(new File(System.getProperty("user.dir")));
+    private JFileChooser chooser = new JFileChooser(
+            new File(PufManagerPreferences.getInstance().getStringPreference(
+                        Preference.CURRENT_DIRECTORY)));
 
     public SaveCompetitionAction(JFrame parent, Competition competition) {
         this(parent, competition, false);
@@ -79,6 +83,9 @@ public class SaveCompetitionAction extends AbstractAction {
             CompetitionSaver.exportCompetition(competition, f);
             //if save was succesful we store the file
             competition.setSaveFile(f);
+            PufManagerPreferences.getInstance().setStringPreference(
+                    PufManagerPreferences.Preference.CURRENT_DIRECTORY, 
+                    f.getParent());
         } catch (IOException ex) {
             Logger.getLogger(SaveCompetitionAction.class.getName()).log(Level.SEVERE, null, ex);
         }

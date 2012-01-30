@@ -25,6 +25,8 @@ import be.rheynaerde.pufmanager.data.Competition;
 import be.rheynaerde.pufmanager.gui.PufManagerFrame;
 import be.rheynaerde.pufmanager.io.CompetitionLoader;
 
+import be.rheynaerde.pufmanager.preferences.PufManagerPreferences;
+import be.rheynaerde.pufmanager.preferences.PufManagerPreferences.Preference;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.IOException;
@@ -33,7 +35,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.AbstractAction;
 import javax.swing.JFileChooser;
-import javax.swing.JFrame;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
@@ -48,7 +49,9 @@ public class LoadCompetitionAction extends AbstractAction {
             ResourceBundle.getBundle("be.rheynaerde.pufmanager.gui.actions");
 
     private PufManagerFrame parent;
-    private JFileChooser chooser = new JFileChooser(new File(System.getProperty("user.dir")));
+    private JFileChooser chooser = new JFileChooser(
+            new File(PufManagerPreferences.getInstance().getStringPreference(
+                        Preference.CURRENT_DIRECTORY)));
 
     public LoadCompetitionAction(PufManagerFrame parent) {
         super(BUNDLE.getString("load"));
@@ -70,6 +73,9 @@ public class LoadCompetitionAction extends AbstractAction {
                 //store the file from which this competition was loaded
                 competition.setSaveFile(f);
                 parent.setCompetition(competition);
+                PufManagerPreferences.getInstance().setStringPreference(
+                        PufManagerPreferences.Preference.CURRENT_DIRECTORY, 
+                        f.getParent());
             } catch (IOException ex) {
                 Logger.getLogger(LoadCompetitionAction.class.getName()).log(Level.SEVERE, null, ex);
             }
