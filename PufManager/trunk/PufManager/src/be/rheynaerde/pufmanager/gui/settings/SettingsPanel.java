@@ -105,11 +105,11 @@ public class SettingsPanel extends JPanel {
                     )
                 .addGroup(
                     layout.createParallelGroup()
-                        .addComponent(titleField)
-                        .addComponent(subtitleField)
-                        .addComponent(langBox)
-                        .addComponent(maxScoreField)
-                        .addComponent(browseComponent)
+                        .addComponent(titleField, 0, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(subtitleField, 0, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(langBox, 0, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(maxScoreField, 0, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(browseComponent, 0, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     )
                 );
         layout.setVerticalGroup(
