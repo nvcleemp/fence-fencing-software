@@ -116,27 +116,27 @@ public class SettingsPanel extends JPanel {
                 layout.createSequentialGroup()
                     .addGroup(
                         layout.createParallelGroup()
-                            .addComponent(titleLabel)
+                            .addComponent(titleLabel, GroupLayout.Alignment.CENTER)
                             .addComponent(titleField)
                         )
                     .addGroup(
                         layout.createParallelGroup()
-                            .addComponent(subtitleLabel)
+                            .addComponent(subtitleLabel, GroupLayout.Alignment.CENTER)
                             .addComponent(subtitleField)
                         )
                     .addGroup(
                         layout.createParallelGroup()
-                            .addComponent(langLabel)
+                            .addComponent(langLabel, GroupLayout.Alignment.CENTER)
                             .addComponent(langBox)
                         )
                     .addGroup(
                         layout.createParallelGroup()
-                            .addComponent(maxScoreLabel)
+                            .addComponent(maxScoreLabel, GroupLayout.Alignment.CENTER)
                             .addComponent(maxScoreField)
                         )
                     .addGroup(
                         layout.createParallelGroup()
-                            .addComponent(imageLabel)
+                            .addComponent(imageLabel, GroupLayout.Alignment.CENTER)
                             .addComponent(browseComponent)
                         )
                     .addComponent(saveButton)
