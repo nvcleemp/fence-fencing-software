@@ -22,15 +22,21 @@
 package be.rheynaerde.pufmanager.gui.settings;
 
 import be.rheynaerde.pufmanager.data.CompetitionSettings;
+import be.rheynaerde.pufmanager.util.BrowseComponent;
+
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.AbstractAction;
 import javax.swing.ComboBoxEditor;
 import javax.swing.DefaultListCellRenderer;
@@ -57,6 +63,7 @@ public class SettingsPanel extends JPanel {
     private JTextField subtitleField;
     private JComboBox langBox;
     private JFormattedTextField maxScoreField;
+    private BrowseComponent browseComponent;
 
     public SettingsPanel(CompetitionSettings settings) {
         this.settings = settings;
@@ -69,6 +76,7 @@ public class SettingsPanel extends JPanel {
         JLabel subtitleLabel = new JLabel(BUNDLE.getString("setting.subtitle.label"));
         JLabel langLabel = new JLabel(BUNDLE.getString("setting.lang.label"));
         JLabel maxScoreLabel = new JLabel(BUNDLE.getString("setting.max.score.label"));
+        JLabel imageLabel = new JLabel(BUNDLE.getString("setting.image.label"));
 
         titleField = new JTextField(settings.getTitle());
         subtitleField = new JTextField(settings.getSubtitle());
@@ -77,6 +85,10 @@ public class SettingsPanel extends JPanel {
         langBox.setEditor(new LocaleEditor());
         langBox.setSelectedItem(settings.getLocale());
         maxScoreField = new JFormattedTextField(settings.getMaximumScore());
+        browseComponent = new BrowseComponent(
+                new File(settings.getImageUrl().getFile()),
+                BUNDLE.getString("setting.image.browse"),
+                BrowseComponent.FileSelectionMode.FILES_ONLY);
 
         JButton saveButton = new JButton(new SaveAction());
 
@@ -88,6 +100,7 @@ public class SettingsPanel extends JPanel {
                         .addComponent(subtitleLabel)
                         .addComponent(langLabel)
                         .addComponent(maxScoreLabel)
+                        .addComponent(imageLabel)
                         .addComponent(saveButton)
                     )
                 .addGroup(
@@ -96,6 +109,7 @@ public class SettingsPanel extends JPanel {
                         .addComponent(subtitleField)
                         .addComponent(langBox)
                         .addComponent(maxScoreField)
+                        .addComponent(browseComponent)
                     )
                 );
         layout.setVerticalGroup(
@@ -119,6 +133,11 @@ public class SettingsPanel extends JPanel {
                         layout.createParallelGroup()
                             .addComponent(maxScoreLabel)
                             .addComponent(maxScoreField)
+                        )
+                    .addGroup(
+                        layout.createParallelGroup()
+                            .addComponent(imageLabel)
+                            .addComponent(browseComponent)
                         )
                     .addComponent(saveButton)
 
@@ -150,6 +169,13 @@ public class SettingsPanel extends JPanel {
             settings.setSubtitle(subtitleField.getText());
             settings.setLocale((Locale)langBox.getModel().getSelectedItem());
             settings.setMaximumScore((Integer)maxScoreField.getValue());
+            try {
+                settings.setImageUrl(browseComponent.getFile().toURI().toURL());
+            } catch (MalformedURLException ex) {
+                Logger.getLogger(
+                        SettingsPanel.class.getName()).log(
+                                    Level.SEVERE, "Image URL not saved.", ex);
+            }
             fireSettingsSaved();
         }
 
