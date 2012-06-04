@@ -111,8 +111,10 @@ public final class CompetitionSettings {
     }
 
     public Image getImage() {
-        if(image!=null || imageUrl == null)
+        if(image!=null)
             return image;
+        else if(imageUrl == null)
+            return null;
         else {
             try {
                 image = Image.getInstance(imageUrl);
