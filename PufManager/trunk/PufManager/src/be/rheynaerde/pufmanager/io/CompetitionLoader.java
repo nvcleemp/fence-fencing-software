@@ -29,6 +29,8 @@ import be.rheynaerde.pufmanager.data.Team;
 import be.rheynaerde.pufmanager.roundgenerator.FixedRoundGenerator;
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -110,6 +112,7 @@ public class CompetitionLoader {
             settings.setSubtitle(getStringFromValueElement(settingsElement.getChild("subtitle"), ""));
             settings.setMaximumScore(getIntFromValueElement(settingsElement.getChild("max"), 5));
             settings.setLocale(getLocaleFromValueElement(settingsElement.getChild("locale"), Locale.getDefault()));
+            settings.setImageUrl(getURLFromValueElement(settingsElement.getChild("image"), null));
         }
         return settings;
     }
@@ -149,6 +152,20 @@ public class CompetitionLoader {
                 return defaultValue;
             }
             return new Locale(language, country, variant);
+        }
+    }
+    
+    private static URL getURLFromValueElement(Element valueElement, URL defaultValue){
+        if(valueElement==null || valueElement.getAttributeValue("value")==null){
+            return defaultValue;
+        } else {
+            URL url = defaultValue;
+            try {
+                url = new URL(valueElement.getAttributeValue("value"));
+            } catch (MalformedURLException ex) {
+                Logger.getLogger(CompetitionLoader.class.getName()).log(Level.SEVERE, "Error while reading image url for competition.", ex);
+            }
+            return url;
         }
     }
     
