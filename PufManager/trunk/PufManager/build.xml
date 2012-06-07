@@ -76,6 +76,8 @@
 
     <taskdef resource="be/ugent/caagt/antext/tasks.properties" classpath="${ant.AntExtensions.classpath}" />
 
+    <target name="-pre-jar" depends="license-headers"/>
+
     <target name="license-headers" depends="init"
         description="Adjust file headers to contain license">
         <replaceHeader header="etc/license_header.txt"
