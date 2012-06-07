@@ -26,6 +26,8 @@ import be.rheynaerde.pufmanager.data.CompetitionSettings;
 import be.rheynaerde.pufmanager.data.CompetitionSettings.Setting;
 import be.rheynaerde.pufmanager.data.listener.CompetitionSettingsListener;
 import be.rheynaerde.pufmanager.gui.actions.CreateRoundsPdfAction;
+import be.rheynaerde.pufmanager.gui.actions.ExportPoolSheetAction;
+import be.rheynaerde.pufmanager.gui.actions.GetRankingAction;
 import be.rheynaerde.pufmanager.gui.actions.ImportTextFile;
 import be.rheynaerde.pufmanager.gui.actions.LoadCompetitionAction;
 import be.rheynaerde.pufmanager.gui.actions.SaveCompetitionAction;
@@ -106,7 +108,7 @@ public class PufManagerFrame extends JFrame {
         bar.add(fileMenu);
         JMenu exportMenu = new JMenu(BUNDLE.getString("pufmanager.menu.export"));
         exportMenu.add(new CreateRoundsPdfAction(competition, this));
-        exportMenu.add(new JMenuItem(BUNDLE.getString("pufmanager.menu.export.pool")));
+        exportMenu.add(new ExportPoolSheetAction(competition, this));
         bar.add(exportMenu);
         JMenu actionsMenu = new JMenu(BUNDLE.getString("pufmanager.menu.actions"));
         actionsMenu.add(new AbstractAction(BUNDLE.getString("pufmanager.menu.actions.rearrange")) {
