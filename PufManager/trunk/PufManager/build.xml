@@ -98,6 +98,7 @@
                 <include name="resources/**/*.dtd"/>
                 <include name="resources/**/*.xml"/>
                 <include name="resources/**/*.xslt"/>
+                <include name="src/**/*.html"/>
             </fileset>
         </replaceHeader>
     </target>
