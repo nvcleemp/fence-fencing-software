@@ -1,0 +1,1 @@
+This project started as a simple library to generate pool sheets for use in our fencing club.
